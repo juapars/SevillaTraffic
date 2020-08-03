@@ -21,6 +21,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
@@ -127,7 +128,10 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         var allPoints = mutableListOf<LatLng>()
 
         mMap.addMarker(MarkerOptions().position(seville).title("Marker in Seville"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(seville))
+
+        var camPos = CameraPosition.builder().target(seville).zoom(16f).build()
+
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(camPos))
         mMap.setOnMapClickListener {
             allPoints.add(it)
             mMap.clear()
