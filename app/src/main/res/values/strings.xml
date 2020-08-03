@@ -12,7 +12,7 @@
     <string name="menu_slideshow">Slideshow</string>
     <string name="menu_maps">Maps</string>
 
-    <string name="home_button">Hacer caca</string>
+    <string name="home_button">Mostrar mapa</string>
     <string name="button_start">Start location update</string>
     <string name="title_activity_maps">Map</string>
 
