@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 class HomeViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "Empezar con el botón de abajo"
+        value = "¡Bienvenido a SevillaTraffic! \n Elija como quiere definir su ruta:"
     }
     val text: LiveData<String> = _text
 }

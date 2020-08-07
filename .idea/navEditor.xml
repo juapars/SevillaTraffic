@@ -13,13 +13,13 @@
                       <LayoutPositions />
                     </value>
                   </entry>
-                  <entry key="nav_gallery">
+                  <entry key="nav_googleRoute">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="256" />
-                            <option name="y" value="368" />
+                            <option name="x" value="250" />
+                            <option name="y" value="322" />
                           </Point>
                         </option>
                       </LayoutPositions>
@@ -36,7 +36,7 @@
                         </option>
                         <option name="myPositions">
                           <map>
-                            <entry key="action_nav_home_to_nav_gallery">
+                            <entry key="action_nav_home_to_nav_googleRoute">
                               <value>
                                 <LayoutPositions>
                                   <option name="myPositions">
@@ -51,7 +51,7 @@
                                 </LayoutPositions>
                               </value>
                             </entry>
-                            <entry key="action_nav_home_to_nav_gallery2">
+                            <entry key="action_nav_home_to_nav_manualRoute">
                               <value>
                                 <LayoutPositions />
                               </value>
@@ -61,12 +61,19 @@
                                 <LayoutPositions />
                               </value>
                             </entry>
-                            <entry key="action_nav_home_to_nav_slideshow">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
                           </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="nav_manualRoute">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="50" />
+                            <option name="y" value="556" />
+                          </Point>
                         </option>
                       </LayoutPositions>
                     </value>
@@ -76,20 +83,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="256" />
-                            <option name="y" value="12" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
-                    </value>
-                  </entry>
-                  <entry key="nav_slideshow">
-                    <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="256" />
-                            <option name="y" value="724" />
+                            <option name="x" value="252" />
+                            <option name="y" value="30" />
                           </Point>
                         </option>
                       </LayoutPositions>

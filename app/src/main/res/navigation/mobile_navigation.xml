@@ -11,37 +11,41 @@
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_nav_home_to_nav_gallery"
-            app:destination="@id/nav_gallery"
-            app:popUpTo="@id/nav_gallery"
+            android:id="@+id/action_nav_home_to_nav_googleRoute"
+            app:destination="@id/nav_googleRoute"
+            app:popUpTo="@id/nav_googleRoute"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim">
             <action
                 android:id="@+id/button22"
-                app:destination="@id/nav_slideshow" />
+                app:destination="@id/nav_manualRoute" />
         </action>
         <action
-            android:id="@+id/action_nav_home_to_nav_slideshow"
-            app:destination="@id/nav_slideshow" />
+            android:id="@+id/action_nav_home_to_nav_manualRoute"
+            app:destination="@id/nav_manualRoute" />
         <action
             android:id="@+id/action_nav_home_to_nav_maps"
             app:destination="@id/nav_maps"
             app:popUpTo="@id/nav_home" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_manualRoute2"
+            app:destination="@id/nav_manualRoute"
+            app:popUpTo="@id/nav_home" />
     </fragment>
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.example.sevillatraffic.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        android:id="@+id/nav_googleRoute"
+        android:name="com.example.sevillatraffic.ui.googleRoute.GoogleRouteFragment"
+        android:label="@string/menu_googleRoute"
+        tools:layout="@layout/fragment_google_route" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.example.sevillatraffic.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_manualRoute"
+        android:name="com.example.sevillatraffic.ui.manualRoute.ManualRouteFragment"
+        android:label="@string/menu_manualRoute"
+        tools:layout="@layout/fragment_manual_route" />
     <action
         android:id="@+id/button2"
         app:popUpTo="@id/mobile_navigation"

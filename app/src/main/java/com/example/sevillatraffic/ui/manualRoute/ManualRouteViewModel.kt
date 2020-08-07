@@ -1,13 +1,13 @@
-package com.example.sevillatraffic.ui.slideshow
+package com.example.sevillatraffic.ui.manualRoute
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class SlideshowViewModel : ViewModel() {
+class ManualRouteViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is slideshow Fragment"
+        value = "Comience el registro de ubicaciones, y cuando termine, pulse en parar y a mostrar mapa"
     }
     val text: LiveData<String> = _text
 }

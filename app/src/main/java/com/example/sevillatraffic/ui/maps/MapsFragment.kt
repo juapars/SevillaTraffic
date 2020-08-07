@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,6 +17,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.sevillatraffic.R
 import com.example.sevillatraffic.mapas.model.DirectionResponses
+import com.example.sevillatraffic.ui.home.HomeFragment
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -39,13 +41,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var mapsViewModel: MapsViewModel
     private lateinit var mMap: GoogleMap
-    private var requestingLocationUpdates: Boolean = true
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var mOrigin: LatLng
-    private lateinit var mDestination: LatLng
-
- //   private lateinit var txt: TextView
-
+    private var locatlist: ArrayList<LatLng>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,17 +53,10 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
   //      txt = root.findViewById(R.id.text_map)
 
-        mOrigin = LatLng(37.389280, -5.970090) //--------------------------------------------------------------------------------
-        mDestination = LatLng(37.38259, -6.008911)//--------------------------------------------------------------------------------
 
         mapsViewModel.text.observe(viewLifecycleOwner, Observer {
         })
 
-/*
-        val mapFragment = requireActivity().supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
-*/
         val manager = requireActivity().supportFragmentManager
         val transaction = manager.beginTransaction()
         val fragment = SupportMapFragment()
@@ -120,9 +109,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         mMap.isMyLocationEnabled = true
         mMap.uiSettings.isMapToolbarEnabled = true
         mMap.uiSettings.isZoomControlsEnabled = true
-        //   mMap.setOnMyLocationButtonClickListener(this)
-        //  mMap.setOnMyLocationClickListener(this);
-
+/*
         // Add a marker in Seville and move the camera
         val seville = LatLng(37.38, -5.98)
         var allPoints = mutableListOf<LatLng>()
@@ -136,52 +123,53 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             allPoints.add(it)
             mMap.clear()
             mMap.addMarker(MarkerOptions().position(it))
+        }*/
+
+        if(arguments?.getSerializable("listLoc") !=null) {
+            locatlist = arguments?.getSerializable("listLoc") as ArrayList<LatLng>
+        }
+        if (locatlist.isNullOrEmpty()){
+            val apiServices = RetrofitClient.apiServices(this.requireContext())
+            val origin: String? = requireArguments().getString("txtOrigin")
+            val dest = requireArguments().getString("txtDestination")
+            if (origin != null && dest != null) {
+                apiServices.getDirection(origin,dest,getString(R.string.api_key))
+                    .enqueue(object : Callback<DirectionResponses> {
+                        override fun onResponse(call: Call<DirectionResponses>, response: Response<DirectionResponses>) {
+                            drawPolyline(response)
+                            Log.d("MapsFragment", "OWOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO$response")
+                            Log.d("bisa dong oke", response.message())
+                        }
+
+                        override fun onFailure(call: Call<DirectionResponses>, t: Throwable) {
+                            Log.e("anjir error", t.localizedMessage)
+                        }
+                    })
+            }
+//            var latitude = arguments?.getDouble("latitude")
+   //         var longitude = arguments?.getDouble("longitude")
+  /*          navigation.
+            var current = LatLng(mMap.myLocation.latitude,mMap.myLocation.longitude)
+            var camPos = CameraPosition.builder().target(current).zoom(14f).build()
+
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(camPos))*/
+        }else{
+            Log.d("OWOOOOOOOOOOOOOOO","OWOOOOOOOOOOOOOOOOOOOOOOOOOOO${locatlist!![locatlist!!.size-1]}")
+            var camPos = CameraPosition.builder().target(locatlist!![locatlist!!.size-1]).zoom(16f).build()
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(camPos))
+            var pl = PolylineOptions()
+            for (a in locatlist!!) {
+                pl.add(a)
+            }
+            mMap.addPolyline(pl.width(10f).color(Color.RED))
         }
 
-  //      txt.text = arguments.toString()
-/*
-        var locatlist: ArrayList<Pair<Double,Double>> = this.arguments?.get(0.toString()) as ArrayList<Pair<Double, Double>>
-
-        var pl = PolylineOptions()
-
-        for (a in locatlist){
-            pl.add(LatLng(a.first,a.second))
-        }
-
-        mMap.addPolyline(pl.width(10f).color(Color.RED))*/
-/*
-       mMap.addPolyline(
-           PolylineOptions()
-               .add(LatLng(37.389280, -5.970090))
-               .add(LatLng(37.387818, -5.968076))
-               .add(LatLng(37.387780, -5.967811))
-               .add(LatLng(37.387540, -5.967787))
-               .add(LatLng(37.387510, -5.959980))
-               .width(10f)
-               .color(Color.RED)
-
-       )*/
-
-        val fkip = LatLng(37.389280, -5.970090)
+        /*
+         val fkip = LatLng(37.389280, -5.970090)
         val monas = LatLng(37.380736, -6.005469)
         val fromFKIP = fkip.latitude.toString() + "," + fkip.longitude.toString()
         val toMonas = monas.latitude.toString() + "," + monas.longitude.toString()
-
-        val apiServices =
-            RetrofitClient.apiServices(
-                this.requireContext()
-            )
-        apiServices.getDirection(fromFKIP, toMonas, getString(R.string.api_key))
-            .enqueue(object : Callback<DirectionResponses> {
-                override fun onResponse(call: Call<DirectionResponses>, response: Response<DirectionResponses>) {
-                    drawPolyline(response)
-                    Log.d("bisa dong oke", response.message())
-                }
-
-                override fun onFailure(call: Call<DirectionResponses>, t: Throwable) {
-                    Log.e("anjir error", t.localizedMessage)
-                }
-            })
+*/
     }
 
     private fun drawPolyline(response: Response<DirectionResponses>) {
@@ -191,6 +179,9 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             .width(8f)
             .color(Color.RED)
         mMap.addPolyline(polyline)
+        var camPos = CameraPosition.builder().target(polyline.points[0]).zoom(14f).build()
+
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(camPos))
     }
 
     private interface ApiServices {
@@ -211,6 +202,4 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                 ApiServices::class.java)
         }
     }
-
-
 }
