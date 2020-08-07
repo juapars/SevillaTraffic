@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@+id/nav_notifications">
 
     <fragment
-        android:id="@+id/nav_home"
-        android:name="com.example.sevillatraffic.ui.home.HomeFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" >
+        android:id="@+id/nav_notifications"
+        android:name="com.example.sevillatraffic.ui.notifications.NotificationsFragment"
+        android:label="@string/menu_notifications"
+        tools:layout="@layout/fragment_notifications" >
         <action
             android:id="@+id/action_nav_home_to_nav_googleRoute"
             app:destination="@id/nav_googleRoute"
@@ -28,11 +28,11 @@
         <action
             android:id="@+id/action_nav_home_to_nav_maps"
             app:destination="@id/nav_maps"
-            app:popUpTo="@id/nav_home" />
+            app:popUpTo="@id/nav_notifications" />
         <action
             android:id="@+id/action_nav_home_to_nav_manualRoute2"
             app:destination="@id/nav_manualRoute"
-            app:popUpTo="@id/nav_home" />
+            app:popUpTo="@id/nav_notifications" />
     </fragment>
 
     <fragment

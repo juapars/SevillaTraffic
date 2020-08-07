@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.nav_home,
+            R.id.nav_notifications,
             R.id.nav_googleRoute,
             R.id.nav_manualRoute,
             R.id.nav_maps

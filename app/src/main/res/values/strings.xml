@@ -7,7 +7,7 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Opciones</string>
 
-    <string name="menu_home">Home</string>
+    <string name="menu_notifications">Alertas</string>
     <string name="menu_googleRoute">Ruta con google</string>
     <string name="menu_manualRoute">Ruta manual</string>
     <string name="menu_maps">Maps</string>
