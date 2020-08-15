@@ -2,6 +2,7 @@ package com.example.sevillatraffic.ui.maps
 
 import android.Manifest
 import android.content.Context
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
@@ -9,11 +10,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.example.sevillatraffic.R
 import com.example.sevillatraffic.mapas.model.DirectionResponses
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -23,6 +27,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.maps.android.PolyUtil
 import retrofit2.Call
 import retrofit2.Callback
@@ -38,6 +43,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     private lateinit var mapsViewModel: MapsViewModel
     private lateinit var mMap: GoogleMap
     private var locatlist: ArrayList<LatLng>? = null
+
+    private lateinit var btnConfirm: FloatingActionButton
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,6 +67,33 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         transaction.commit()
 
         fragment.getMapAsync(this)
+
+        btnConfirm = root.findViewById(R.id.btn_confirm)
+
+        btnConfirm.setOnClickListener {
+            val alertDialog2: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+
+            alertDialog2.setTitle("Confirmar ruta")
+            alertDialog2.setMessage("¿Es esta la ruta que quiere guardar?")
+
+            alertDialog2.setPositiveButton("Si") {
+                    dialog, which -> // Write your code here to execute after dialog
+               /* Toast.makeText(requireContext(), "You clicked on YES", Toast.LENGTH_SHORT)
+                    .show()*/
+                findNavController().navigate(R.id.nav_edit_route)
+            }
+
+            alertDialog2.setNegativeButton("No"
+            ) { dialog, which -> // Write your code here to execute after dialog
+                /*Toast.makeText(
+                    requireContext(),"You clicked on NO", Toast.LENGTH_SHORT)
+                    .show()
+                dialog.cancel()*/
+                findNavController().navigate(R.id.nav_newRoute)
+            }
+
+            alertDialog2.show()
+        }
 
         return root
     }

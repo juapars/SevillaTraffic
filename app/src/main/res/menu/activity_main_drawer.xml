@@ -6,19 +6,18 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_notifications"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_baseline_notifications_24"
             android:title="@string/menu_notifications" />
         <item
-            android:id="@+id/nav_googleRoute"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/menu_googleRoute" />
+            android:id="@+id/nav_newRoute"
+            android:icon="@drawable/ic_baseline_add_location_24"
+            android:title="@string/menu_newRoute" />
+
         <item
-            android:id="@+id/nav_manualRoute"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_manualRoute" />
-        <item
-            android:id="@+id/nav_maps"
-            android:icon="@drawable/ic_menu_maps"
-            android:title="@string/menu_maps" />
+            android:id="@+id/nav_my_routes"
+            android:icon="@drawable/ic_baseline_call_split_24"
+            android:title="@string/menu_myRoutes" />
+
+
     </group>
 </menu>

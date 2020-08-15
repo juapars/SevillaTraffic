@@ -1,4 +1,4 @@
-package com.example.sevillatraffic.ui.notifications
+package com.example.sevillatraffic.ui.newRoute
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,11 +12,12 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.example.sevillatraffic.R
 import com.example.sevillatraffic.R.layout
+import com.example.sevillatraffic.ui.notifications.NewRouteViewModel
 
 
-class NotificationsFragment : AppCompatDialogFragment() {
+class NewRouteFragment : AppCompatDialogFragment() {
 
-    private lateinit var notificationsViewModel: NewRouteViewModel
+    private lateinit var newRouteViewModel: NewRouteViewModel
 
     private lateinit var btnManual: Button
     private lateinit var btnGoogle: Button
@@ -26,9 +27,9 @@ class NotificationsFragment : AppCompatDialogFragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        notificationsViewModel =
+        newRouteViewModel =
                 ViewModelProviders.of(this).get(NewRouteViewModel::class.java)
-        val root = inflater.inflate(layout.fragment_notifications, container, false)
+        val root = inflater.inflate(layout.fragment_new_route, container, false)
 
         val textView: TextView = root.findViewById(R.id.text_home)
         btnManual = root.findViewById(R.id.btn_manual)
@@ -42,7 +43,7 @@ class NotificationsFragment : AppCompatDialogFragment() {
             findNavController().navigate(R.id.nav_googleRoute)
         }
 
-        notificationsViewModel.text.observe(viewLifecycleOwner, Observer {
+        newRouteViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
 

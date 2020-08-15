@@ -10,16 +10,25 @@
     <string name="menu_notifications">Alertas</string>
     <string name="menu_googleRoute">Ruta con google</string>
     <string name="menu_manualRoute">Ruta manual</string>
-    <string name="menu_maps">Maps</string>
+    <string name="menu_maps">Ruta actual</string>
+    <string name="menu_newRoute">Nueva ruta</string>
+    <string name="menu_myRoutes">Mis rutas</string>
 
     <string name="home_button">Mostrar mapa</string>
     <string name="button_manual">Manualmente</string>
     <string name="button_google">Con google maps</string>
     <string name="btn_search">Buscar ruta</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_maps">Ruta actual</string>
 
     <string name="start_updates">Empezar registro</string>
     <string name="stop_updates">Parar registro</string>
+
+    <string name="txt_not">Elija la hora de inicio y fin de notificaciones:</string>
+
+    <string name="txt_notStart">Inicio:</string>
+    <string name="txt_notEnd">Fin:</string>
+
+    <string name="btn_save">Guardar ruta</string>
 
     <string name="base_url">https://maps.googleapis.com</string>
 
