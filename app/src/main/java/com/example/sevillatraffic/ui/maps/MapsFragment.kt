@@ -2,15 +2,15 @@ package com.example.sevillatraffic.ui.maps
 
 import android.Manifest
 import android.content.Context
-import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -24,9 +24,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.gms.maps.model.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.maps.android.PolyUtil
 import retrofit2.Call
@@ -36,6 +34,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MapsFragment : Fragment(), OnMapReadyCallback {
 
@@ -43,6 +43,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     private lateinit var mapsViewModel: MapsViewModel
     private lateinit var mMap: GoogleMap
     private var locatlist: ArrayList<LatLng>? = null
+    private lateinit var origin : String
+    private lateinit var dest : String
 
     private lateinit var btnConfirm: FloatingActionButton
 
@@ -80,7 +82,11 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                     dialog, which -> // Write your code here to execute after dialog
                /* Toast.makeText(requireContext(), "You clicked on YES", Toast.LENGTH_SHORT)
                     .show()*/
-                findNavController().navigate(R.id.nav_edit_route)
+                val datosAEnviar = Bundle()
+                datosAEnviar.putSerializable("origin", origin)
+                datosAEnviar.putSerializable("dest", dest)
+                datosAEnviar.putBoolean("edit", false)
+                findNavController().navigate(R.id.nav_edit_route,datosAEnviar)
             }
 
             alertDialog2.setNegativeButton("No"
@@ -160,13 +166,14 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         }
         if (locatlist.isNullOrEmpty()){
             val apiServices = RetrofitClient.apiServices(this.requireContext())
-            val origin: String? = requireArguments().getString("txtOrigin")
-            val dest = requireArguments().getString("txtDestination")
+            origin = requireArguments().getString("txtOrigin").toString()
+            dest = requireArguments().getString("txtDestination").toString()
             if (origin != null && dest != null) {
                 apiServices.getDirection(origin,dest,getString(R.string.api_key))
                     .enqueue(object : Callback<DirectionResponses> {
                         override fun onResponse(call: Call<DirectionResponses>, response: Response<DirectionResponses>) {
                             drawPolyline(response)
+
                             Log.d("MapsFragment", "OWOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO$response")
                             Log.d("bisa dong oke", response.message())
                         }
@@ -176,21 +183,30 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                         }
                     })
             }
-//            var latitude = arguments?.getDouble("latitude")
-   //         var longitude = arguments?.getDouble("longitude")
-  /*          navigation.
-            var current = LatLng(mMap.myLocation.latitude,mMap.myLocation.longitude)
-            var camPos = CameraPosition.builder().target(current).zoom(14f).build()
+            mMap.addMarker(MarkerOptions().position(getCoordinates(origin)))
+            mMap.addMarker(MarkerOptions().position(getCoordinates(dest)))
 
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(camPos))*/
         }else{
             Log.d("OWOOOOOOOOOOOOOOO","OWOOOOOOOOOOOOOOOOOOOOOOOOOOO${locatlist!![locatlist!!.size-1]}")
+
+            origin = getAddress(locatlist!![0])
+            dest = getAddress(locatlist!![locatlist!!.size-1])
+/*
+            val city: String = addresses[0].getLocality()
+            val state: String = addresses[0].getAdminArea()
+            val country: String = addresses[0].getCountryName()
+            val postalCode: String = addresses[0].getPostalCode()
+            val knownName: String = addresses[0].getFeatureName()*/
+
             var camPos = CameraPosition.builder().target(locatlist!![locatlist!!.size-1]).zoom(16f).build()
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(camPos))
             var pl = PolylineOptions()
             for (a in locatlist!!) {
                 pl.add(a)
             }
+            var mOrigin = MarkerOptions().position(locatlist!![0])
+            mMap.addMarker(MarkerOptions().position(locatlist!![0]))
+            mMap.addMarker(MarkerOptions().position(locatlist!![locatlist!!.size-1]))
             mMap.addPolyline(pl.width(10f).color(Color.RED))
         }
 
@@ -200,6 +216,19 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         val fromFKIP = fkip.latitude.toString() + "," + fkip.longitude.toString()
         val toMonas = monas.latitude.toString() + "," + monas.longitude.toString()
 */
+    }
+
+    private fun getAddress(coordinates: LatLng): String{
+        var geocoder = Geocoder(requireContext(), Locale.getDefault())
+
+        var res = geocoder.getFromLocation(coordinates.latitude, coordinates.longitude, 1)
+        return res[0].getAddressLine(0)
+    }
+    private fun getCoordinates(name: String): LatLng{
+        var geocoder = Geocoder(requireContext(), Locale.getDefault())
+
+        var res = geocoder.getFromLocationName(name,1)
+        return LatLng(res[0].latitude,res[0].longitude)
     }
 
     private fun drawPolyline(response: Response<DirectionResponses>) {

@@ -1,9 +1,10 @@
 package com.example.sevillatraffic.model
 
 import com.google.android.gms.maps.model.PolylineOptions
+import java.io.Serializable
 import java.util.*
 
-class Route {
+class Route : Serializable {
 
     var id : Int = 0
     var name : String? = null

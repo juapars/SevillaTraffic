@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
 import androidx.lifecycle.Observer
@@ -15,6 +16,7 @@ import com.example.sevillatraffic.adapter.ListRouteAdapter
 import com.example.sevillatraffic.db.DBHelper
 import com.example.sevillatraffic.model.Route
 import kotlinx.android.synthetic.main.my_routes_fragment.*
+import kotlinx.android.synthetic.main.row_layout.*
 import org.w3c.dom.Text
 
 class MyRoutesFragment : Fragment() {
@@ -55,7 +57,10 @@ class MyRoutesFragment : Fragment() {
 
     private fun refreshData(routes: ListView) {
         lstRoutes = db.allRoute
-        val adapter = ListRouteAdapter(requireActivity(), lstRoutes)
+        val adapter = ListRouteAdapter(requireActivity(), lstRoutes,this)
+        adapter.notifyDataSetChanged()
         routes.adapter = adapter
     }
+
+
 }

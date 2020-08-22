@@ -2,107 +2,144 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/edit_route"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/edit_route"
     tools:context=".ui.editRoute.EditRouteFragment">
 
     <EditText
         android:id="@+id/edt_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="136dp"
+        android:layout_marginTop="29dp"
         android:ems="10"
         android:hint="Ruta 1"
         android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/txt_not"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_edit" />
 
     <TextView
         android:id="@+id/txt_edit"
         android:layout_width="371dp"
         android:layout_height="94dp"
-        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toTopOf="@+id/edt_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <EditText
         android:id="@+id/edt_notStart"
-        android:layout_width="132dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginBottom="96dp"
+        android:layout_width="71dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="88dp"
         android:ems="10"
         android:hint="08:00"
-        android:inputType="textPersonName"
+        android:inputType="time"
         app:layout_constraintBottom_toTopOf="@+id/btn_save"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/ib_notStart"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_notStart" />
+
+    <ImageButton
+        android:id="@+id/ib_notStart"
+        android:layout_width="56dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_baseline_access_time_white_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/edt_notEnd"
+        app:layout_constraintStart_toEndOf="@+id/edt_notStart"
+        app:layout_constraintTop_toBottomOf="@+id/txt_not"
+        app:layout_constraintVertical_bias="0.187"
+        tools:ignore="ContentDescription" />
 
     <EditText
         android:id="@+id/edt_notEnd"
-        android:layout_width="132dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="56dp"
-        android:layout_marginBottom="96dp"
+        android:layout_width="71dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="92dp"
         android:ems="10"
         android:hint="10:30"
-        android:inputType="textPersonName"
+        android:inputType="time"
         app:layout_constraintBottom_toTopOf="@+id/btn_save"
+        app:layout_constraintEnd_toStartOf="@+id/ib_notEnd"
+        app:layout_constraintStart_toEndOf="@+id/ib_notStart"
+        app:layout_constraintTop_toBottomOf="@+id/txt_notEnd" />
+
+    <ImageButton
+        android:id="@+id/ib_notEnd"
+        android:layout_width="63dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_baseline_access_time_white_24"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.345"
-        app:layout_constraintStart_toEndOf="@+id/edt_notStart" />
+        app:layout_constraintStart_toEndOf="@+id/edt_notEnd"
+        app:layout_constraintTop_toBottomOf="@+id/txt_not"
+        app:layout_constraintVertical_bias="0.2"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/txt_not"
         android:layout_width="339dp"
         android:layout_height="35dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginBottom="200dp"
         android:text="@string/txt_not"
-        app:layout_constraintBottom_toTopOf="@+id/edt_notStart"
+        app:layout_constraintBottom_toTopOf="@+id/btn_save"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.277"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edt_name"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/edt_name" />
 
     <Button
         android:id="@+id/btn_save"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="96dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="91dp"
+        android:layout_marginBottom="94dp"
         android:text="@string/btn_save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.49"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ib_notStart" />
 
     <TextView
         android:id="@+id/txt_notStart"
         android:layout_width="63dp"
         android:layout_height="22dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="37dp"
         android:text="@string/txt_notStart"
         app:layout_constraintBottom_toTopOf="@+id/edt_notStart"
         app:layout_constraintEnd_toStartOf="@+id/txt_notEnd"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.161"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_not"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_not" />
 
     <TextView
         android:id="@+id/txt_notEnd"
         android:layout_width="54dp"
         android:layout_height="17dp"
-        android:layout_marginTop="26dp"
-        android:layout_marginEnd="72dp"
+        android:layout_marginStart="115dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginEnd="88dp"
         android:text="@string/txt_notEnd"
         app:layout_constraintBottom_toTopOf="@+id/edt_notEnd"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/ib_notStart"
         app:layout_constraintTop_toBottomOf="@+id/txt_not"
-        app:layout_constraintVertical_bias="0.086" />
+        app:layout_constraintVertical_bias="0.0" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

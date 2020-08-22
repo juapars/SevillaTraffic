@@ -307,7 +307,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material/icons/materialicons/call_split/baseline_call_split_24.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material/icons/materialicons/access_time/baseline_access_time_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -317,7 +317,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_baseline_call_split_24" />
+                            <entry key="color" value="f8fff1" />
+                            <entry key="outputName" value="ic_baseline_access_time_white_24" />
                             <entry key="sourceFile" value="C:\Users\John\Desktop\TFG\SevillaTraffic" />
                           </map>
                         </option>

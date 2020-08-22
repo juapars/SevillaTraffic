@@ -107,9 +107,9 @@ class DBHelper(context: Context): SQLiteOpenHelper(context,
         return db.update(TABLE_NAME, values, "$COL_ID=?", arrayOf(route.id.toString()))
     }
 
-    fun deleteRoute(route: Route) {
+    fun deleteRoute(id: String) {
         val db = this.writableDatabase
-        db.delete(TABLE_NAME, "$COL_ID=?", arrayOf(route.id.toString()))
+        db.delete(TABLE_NAME, "$COL_ID=?", arrayOf(id))
         db.close()
     }
 
