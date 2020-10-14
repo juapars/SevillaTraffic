@@ -15,8 +15,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -46,6 +48,7 @@ class ManualRouteFragment : Fragment() {
     private lateinit var btnStartUpdates: Button
     private lateinit var btnStopUpdates: Button
     private lateinit var button: Button
+    private lateinit var info_button : Button
     // location last updated time
     private var mLastUpdateTime: String? = null
 
@@ -60,6 +63,8 @@ class ManualRouteFragment : Fragment() {
     private var mRequestingLocationUpdates: Boolean? = null
 
     private var listLocation = arrayListOf<LatLng>()
+
+    private var buttons_toggle = 0
     //mutableMapOf<Double,Double>()
 
 
@@ -94,6 +99,27 @@ class ManualRouteFragment : Fragment() {
             val datosAEnviar = Bundle()
             datosAEnviar.putSerializable("listLoc", listLocation)
             findNavController().navigate(R.id.nav_maps,datosAEnviar)
+        }
+
+        info_button = root.findViewById(R.id.button_info_m)
+        info_button.setOnClickListener {
+            val alertDialog: AlertDialog.Builder = AlertDialog.Builder(requireContext(),R.style.RightJustifyDialogWindowTitle)
+
+            alertDialog.setTitle("Ruta manual")
+            alertDialog.setMessage("Aquí podrá definir su ruta de forma manual, es decir, " +
+                    "cuando pulse en 'Comenzar registro', la aplicación le geolocalizará mediante " +
+                    "su ubicación para registrar por donde va pasando y así trazar la ruta lo más " +
+                    "fiable posible.\n Cuando termine la ruta, pulse en 'Parar registro' y a " +
+                    "continuación en 'Mostrar mapa' para visualizar la ruta y proceder a guardarla.")
+
+
+            alertDialog.setNegativeButton("De acuerdo"){
+                dialog, which ->
+
+            }
+
+            alertDialog.show()
+
         }
 
         init()
@@ -174,16 +200,21 @@ class ManualRouteFragment : Fragment() {
     }
 
     private fun toggleButtons() {
+        button.isEnabled = false
         if (mRequestingLocationUpdates!!) {
             btnStartUpdates.isEnabled = false
             btnStopUpdates.isEnabled = true
-            button.isEnabled = false
+            buttons_toggle = 1
         } else {
             btnStartUpdates.isEnabled = true
             btnStopUpdates.isEnabled = false
+
+            if(buttons_toggle == 1){
+                button.isEnabled = true
+            }
         }
 
-        button.isEnabled = listLocation.isNotEmpty()
+
     }
 
 
@@ -262,7 +293,7 @@ class ManualRouteFragment : Fragment() {
         mFusedLocationClient
             ?.removeLocationUpdates(mLocationCallback)
             ?.addOnCompleteListener(this.requireActivity()) {
-                Toast.makeText(context, "Location updates stopped!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Actualización de estado detenida.", Toast.LENGTH_SHORT).show()
                 toggleButtons()
             }
     }

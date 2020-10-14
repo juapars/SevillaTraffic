@@ -3,13 +3,12 @@ package com.example.sevillatraffic.ui.googleRoute
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Location
 import android.net.Uri
 import android.os.Bundle
-import android.os.Looper
 import android.provider.Settings
+import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -25,19 +24,11 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.example.sevillatraffic.MainActivity
 import com.example.sevillatraffic.R
-import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import com.karumi.dexter.BuildConfig
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionDeniedResponse
-import com.karumi.dexter.listener.PermissionGrantedResponse
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.single.PermissionListener
-import java.text.DateFormat
-import java.util.*
+import kotlinx.android.synthetic.main.edit_route_fragment.*
+
 
 class GoogleRouteFragment : Fragment() {
 
@@ -101,15 +92,28 @@ class GoogleRouteFragment : Fragment() {
         }
 
         btnSearch.setOnClickListener{
-
-            val datosAEnviar = Bundle()
-            datosAEnviar.putString("txtOrigin", txtOrigin.text.toString())
-            datosAEnviar.putString("txtDestination", txtDestination.text.toString())
-     //       datosAEnviar.putDouble("latitude", mCurrentLocation!!.latitude)
-     //       datosAEnviar.putDouble("longitude", mCurrentLocation!!.longitude)
-     //       Log.d("RouteFragment","OWOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO" + mCurrentLocation!!.latitude)
-            findNavController().navigate(R.id.nav_maps,datosAEnviar)
-
+            when {
+                TextUtils.isEmpty(txtOrigin.text) -> {
+                    Toast.makeText(
+                        requireContext(),
+                        "Ponle un nombre a tu ruta antes de guardar",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                TextUtils.isEmpty(txtDestination.text) -> {
+                    Toast.makeText(
+                        requireContext(),
+                        "Añade una fecha de inicio",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                else -> {
+                    val datosAEnviar = Bundle()
+                    datosAEnviar.putString("txtOrigin", txtOrigin.text.toString())
+                    datosAEnviar.putString("txtDestination", txtDestination.text.toString())
+                    findNavController().navigate(R.id.nav_maps, datosAEnviar)
+                }
+            }
         }
 
 

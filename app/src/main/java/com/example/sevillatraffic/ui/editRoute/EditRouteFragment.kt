@@ -4,14 +4,11 @@ import android.app.TimePickerDialog
 import android.app.TimePickerDialog.OnTimeSetListener
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.TextView
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -20,7 +17,10 @@ import androidx.navigation.fragment.findNavController
 import com.example.sevillatraffic.R
 import com.example.sevillatraffic.db.DBHelper
 import com.example.sevillatraffic.model.Route
+import com.example.sevillatraffic.model.Traffic
+import com.google.maps.android.PolyUtil.isLocationOnEdge
 import kotlinx.android.synthetic.main.edit_route_fragment.*
+import org.w3c.dom.Text
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -65,6 +65,7 @@ class EditRouteFragment : Fragment() {
         })
 
         val btn_save: Button = root.findViewById(R.id.btn_save)
+
         notStart = root.findViewById(R.id.edt_notStart)
         notEnd = root.findViewById(R.id.edt_notEnd)
         ibStart = root.findViewById(R.id.ib_notStart)
@@ -87,30 +88,60 @@ class EditRouteFragment : Fragment() {
         }
 
         btn_save.setOnClickListener {
-            if(edit){
-                var routeOld = requireArguments().getSerializable("route") as Route
-                val route = Route(
-                    routeOld.id, edt_name.text.toString(), routeOld.date.toString(),
-                    "Desde " + routeOld.origin.toString(),
-                    "A " + routeOld.dest.toString(),
-                    edt_notStart.text.toString(), edt_notEnd.text.toString()
-                )
-                db.updateRoute(route)
-            }else {
-                val current = LocalDateTime.now()
-                val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
-                val formatted = current.format(formatter)
-                val route = Route(
-                    (0..1000).random(), edt_name.text.toString(), formatted,
-                    "Desde " + requireArguments().getString("origin").toString(),
-                    "A " + requireArguments().getString("dest").toString(),
-                    edt_notStart.text.toString(), edt_notEnd.text.toString()
-                )
-                Log.d("GUARDAR", "GUARDANDO RUTAAAAAAAAAAAAAAAAAAAAAAAAAAAAA $route")
-                db.addRoute(route)
 
+            when {
+                TextUtils.isEmpty(edt_name.text) -> {
+                    Toast.makeText(
+                        requireContext(),
+                        "Ponle un nombre a tu ruta antes de guardar",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                TextUtils.isEmpty(edt_notStart.text) -> {
+                    Toast.makeText(
+                        requireContext(),
+                        "Añade una fecha de inicio",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                TextUtils.isEmpty(edt_notEnd.text) -> {
+                    Toast.makeText(
+                        requireContext(),
+                        "Añade una fecha fin",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                else -> {
+                    if (edit) {
+                        var routeOld = requireArguments().getSerializable("route") as Route
+                        val route = Route(
+                            routeOld.id, edt_name.text.toString(), routeOld.date.toString(),
+                            routeOld.origin.toString(),
+                            routeOld.dest.toString(),
+                            edt_notStart.text.toString(), edt_notEnd.text.toString(),
+                            routeOld.placemarks.toString(),
+                            "True"
+                        )
+                        db.updateRoute(route)
+                    } else {
+                        val current = LocalDateTime.now()
+                        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
+                        val formatted = current.format(formatter)
+                        val route = Route(
+                            (0..1000).random(), edt_name.text.toString(), formatted,
+                            "Desde " + requireArguments().getString("origin").toString(),
+                            "A " + requireArguments().getString("dest").toString(),
+                            edt_notStart.text.toString(), edt_notEnd.text.toString(),
+                            "" + requireArguments().getString("placemarks"),
+                            "True"
+                        )
+
+                        db.addRoute(route)
+
+                    }
+                    findNavController().navigate(R.id.nav_my_routes)
+                }
             }
-            findNavController().navigate(R.id.nav_my_routes)
         }
 
         return root

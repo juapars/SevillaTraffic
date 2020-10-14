@@ -6,17 +6,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.Button
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment.findNavController
-import androidx.navigation.fragment.findNavController
 import com.example.sevillatraffic.R
 import com.example.sevillatraffic.db.DBHelper
 import com.example.sevillatraffic.model.Route
+import com.example.sevillatraffic.model.Traffic
 import kotlinx.android.synthetic.main.row_layout.view.*
 
 class ListRouteAdapter(activity: Activity, var lstRoute: List<Route>, val parentFragment: Fragment): BaseAdapter() {
@@ -30,20 +27,20 @@ class ListRouteAdapter(activity: Activity, var lstRoute: List<Route>, val parent
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
 
         val rowView: View = inflater.inflate(R.layout.row_layout, null)
-
+        db = DBHelper(act)
         pos = position
-
         rowView.txt_name.text = lstRoute[position].name.toString()
         rowView.txt_date.text = lstRoute[position].date.toString()
         rowView.txt_origin.text = lstRoute[position].origin.toString()
-        rowView.txt_dest.text = lstRoute[position].dest.toString()
+        rowView.txt_dest.text = lstRoute[position].dest.toString() //lstTraffic[0].location.toString()
         rowView.txt_notifications.text = "De ${lstRoute[position].notStart.toString()} a ${lstRoute[position].notEnd.toString()}"
 
         nameR = lstRoute[position].name.toString()
-        db = DBHelper(act)
+
 
         var remove: Button = rowView.findViewById(R.id.btn_remove)
         var edit: Button = rowView.findViewById(R.id.btn_edit)
+        var enabled: Switch = rowView.findViewById(R.id.btn_enable)
 
         edit.setOnClickListener {
             var datos = Bundle()
@@ -67,6 +64,16 @@ class ListRouteAdapter(activity: Activity, var lstRoute: List<Route>, val parent
                 lstRoute = db.allRoute
                 this.notifyDataSetChanged()
                 Toast.makeText(act,"Ruta $nameR eliminada.",Toast.LENGTH_SHORT)
+            }
+
+
+            enabled.setOnCheckedChangeListener{_, isChecked ->
+                if(isChecked){
+
+                }else{
+
+                }
+
             }
 
             alertDialog.setNegativeButton("No"

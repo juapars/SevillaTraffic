@@ -11,20 +11,22 @@ class Route : Serializable {
     var date : String? = null
     var origin: String? = null
     var dest: String? = null
- //   var polyline: PolylineOptions? = null
     var notStart: String? = null
     var notEnd: String? = null
+    var placemarks: String? = null
+    var enabled: String? = null
 
     constructor(id: Int, name: String, date: String, origin: String, dest: String,
-                notStart: String, notEnd: String) {
+                notStart: String, notEnd: String, placemarks: String, enabled: String) {
         this.id = id
         this.name = name
         this.date = date
         this.origin = origin
         this.dest = dest
- //       this.polyline = polyline
         this.notStart = notStart
         this.notEnd = notEnd
+        this.placemarks = placemarks
+        this.enabled = enabled
     }
 
     constructor()

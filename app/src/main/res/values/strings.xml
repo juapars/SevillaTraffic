@@ -22,6 +22,7 @@
 
     <string name="start_updates">Empezar registro</string>
     <string name="stop_updates">Parar registro</string>
+    <string name="manual_description">La ubicación SOLO se actualizará cuando esta pantalla esté activa</string>
 
     <string name="txt_not">Elija la hora de inicio y fin de notificaciones:</string>
 
@@ -33,5 +34,8 @@
     <string name="base_url">https://maps.googleapis.com</string>
 
     <string name="api_key">AIzaSyDMmwbtcC-Wkep4JRFNZtqOgX0YVxDMMzA</string>
+
+    <string name="channel_name">SevillaTraffic</string>
+    <string name="channel_description">Esto es SevillaTraffic</string>
 
 </resources>
