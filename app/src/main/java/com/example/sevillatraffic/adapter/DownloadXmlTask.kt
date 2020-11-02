@@ -16,16 +16,16 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
 
-class DownloadXmlTask(var db: DBHelper, var context: Context) : AsyncTask<String?, Void?, Int>() {
+class DownloadXmlTask(var first:Boolean, var db: DBHelper, var context: Context) : AsyncTask<String?, Void?, Int>() {
 
     override fun doInBackground(vararg params: String?): Int? {
         return try {
             var stream: InputStream? = null
             try {
-                Log.e("ARCHIVO MEGA","EMPIEZA")
+                Log.e("DESCARGA ARCHIVO","EMPIEZA")
                 stream =  downloadUrl("http://trafico.sevilla.org/estado-trafico-CGM.kml")
                 if (stream != null) {
-                    Log.e("ARCHIVO MEGA","eENTRA A LOAD TRAFFIC")
+                    Log.e("DESCARGA ARCHIVO","eENTRA A LOAD TRAFFIC")
                     loadTraffic(stream)
                 }
 
@@ -36,12 +36,12 @@ class DownloadXmlTask(var db: DBHelper, var context: Context) : AsyncTask<String
             0
         } catch (e: IOException) {
             // Error de conexión
-            Log.e("ARCHIVO MEGA1",e.message)
+            Log.e("DESCARGA ARCHIVO E1",e.message)
             1
         } catch (e: XmlPullParserException) {
             e.printStackTrace()
             // Error en los datos
-            Log.e("ARCHIVO MEGA2",e.message)
+            Log.e("DESCARGA ARCHIVO E2",e.message)
             2
         }
     }
@@ -49,7 +49,7 @@ class DownloadXmlTask(var db: DBHelper, var context: Context) : AsyncTask<String
     override fun onPostExecute(resultCode: Int) {
         when (resultCode) {
             0 ->
-                Log.e("ARCHIVO","SE HA DESCARGADO")
+                Log.e("DESCARGA ARCHIVO","SE HA DESCARGADO")
 
             1 ->                     // TODO: Mostrar los mensajes de error en el lugar oportuno
                 Log.w(this.javaClass.name, "Error de conexión")
@@ -97,7 +97,7 @@ class DownloadXmlTask(var db: DBHelper, var context: Context) : AsyncTask<String
 
         var fecha = doc.select("name")[0].text().split(" ")
 
-        Log.e("ARCHIBO GRANDE","Actualizado con fecha ${fecha[2]} ${fecha[3]}")
+        Log.e("DESCARGA ARCHIVO ","Actualizado con fecha ${fecha[2]} ${fecha[3]}")
 
         var cojc = Calendar.getInstance()
         cojc.set(fecha[2].split("/")[2].toInt(),
@@ -109,12 +109,12 @@ class DownloadXmlTask(var db: DBHelper, var context: Context) : AsyncTask<String
         //cojc.compareTo(Calendar.getInstance())  Compara lo de dentro con lo de fuera, 0 si son iguales, 1 si lo de dentro es despues, y -1 si es antes
 
 
-        Log.e("ARCHIVO MEGA", "EL TITULO ES ${cojc.time} y la actual es ${Calendar.getInstance().time}")
+        Log.e("DESCARGA ARCHIVO ", "EL TITULO ES ${cojc.time} y la actual es ${Calendar.getInstance().time}")
 
         if ((db.allTraffic.count() != doc.select("Placemark").count() - 1) ||
             cojc < Calendar.getInstance()
         ) {
-            Log.e("ARCHIVO GRANDE","Actualizado con fecha ${fecha[2]} ${fecha[3]}")
+            Log.e("DESCARGA ARCHIVO ","Actualizado con fecha ${fecha[2]} ${fecha[3]}")
             for (p in doc.select("Placemark")) {
                 for (c in p.select("description")) {
 
@@ -154,7 +154,13 @@ class DownloadXmlTask(var db: DBHelper, var context: Context) : AsyncTask<String
                 }
 
                 var traffic = Traffic(t_id.toInt(), t_location, t_direction, t_intensity, t_source)
-                db.updateTraffic(traffic)
+                if(first){
+                    Log.e("DESCARGA ARCHIVO TR ", "SE AÑADE TRAFFIC")
+                    db.addTraffic(traffic)
+                } else{
+                    Log.e("DESCARGA ARCHIVO TR", "SE ACTUALIZA TRAFFIC")
+                    db.updateTraffic(traffic)
+                }
                 doad += 1
             }
         }

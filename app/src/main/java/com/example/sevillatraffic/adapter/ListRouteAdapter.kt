@@ -3,6 +3,7 @@ package com.example.sevillatraffic.adapter
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +35,7 @@ class ListRouteAdapter(activity: Activity, var lstRoute: List<Route>, val parent
         rowView.txt_origin.text = lstRoute[position].origin.toString()
         rowView.txt_dest.text = lstRoute[position].dest.toString() //lstTraffic[0].location.toString()
         rowView.txt_notifications.text = "De ${lstRoute[position].notStart.toString()} a ${lstRoute[position].notEnd.toString()}"
+        rowView.btn_enable.isChecked = lstRoute[position].enabled?.toBoolean()!!
 
         nameR = lstRoute[position].name.toString()
 
@@ -67,15 +69,6 @@ class ListRouteAdapter(activity: Activity, var lstRoute: List<Route>, val parent
             }
 
 
-            enabled.setOnCheckedChangeListener{_, isChecked ->
-                if(isChecked){
-
-                }else{
-
-                }
-
-            }
-
             alertDialog.setNegativeButton("No"
             ) { dialog, which -> // Write your code here to execute after dialog
                 /*Toast.makeText(
@@ -85,6 +78,13 @@ class ListRouteAdapter(activity: Activity, var lstRoute: List<Route>, val parent
             }
 
             alertDialog.show()
+        }
+
+        enabled.setOnCheckedChangeListener{_, isChecked ->
+            lstRoute[position].enabled = isChecked.toString()
+            Log.e("UWU", "CHECKADO A $isChecked")
+            db.updateRoute(lstRoute[position])
+            this.notifyDataSetChanged()
         }
 
         this.notifyDataSetChanged()

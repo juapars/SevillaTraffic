@@ -11,6 +11,8 @@ import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -51,11 +53,13 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    private var _enableDetectors = true
+    private var _enableFluid = false
+    private var _enableVoice = false
+
+
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var data: List<String>
     private lateinit var db: DBHelper
-    private var alarmMgr: AlarmManager? = null
-    private lateinit var alarmIntent: PendingIntent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         db = DBHelper(this)
 
-    //    DownloadXmlTask(db,this).execute("http://trafico.sevilla.org/estado-trafico-CGM.kml")
+        if(db.allTraffic.isEmpty())  DownloadXmlTask(true,db, this).execute("http://trafico.sevilla.org/estado-trafico-CGM.kml")
 /*
         val fab: FloatingActionButton = findViewById(R.id.fab)
         fab.setOnClickListener { view ->
@@ -92,6 +96,32 @@ class MainActivity : AppCompatActivity() {
         checkPermission()
     }
 
+    fun get_enableDetectors(): Boolean {
+        return _enableDetectors
+    }
+
+    fun set_enableDetectors(_enableDetectors: Boolean) {
+        this._enableDetectors = _enableDetectors
+    }
+
+    fun get_enableFluid(): Boolean {
+        return _enableFluid
+    }
+
+    fun set_enableFluid(_enableFluid: Boolean) {
+        this._enableFluid = _enableFluid
+    }
+
+    fun get_enableVoice(): Boolean {
+        return _enableVoice
+    }
+
+    fun set_enableVoice(_enableVoice: Boolean) {
+        this._enableVoice = _enableVoice
+    }
+
+
+
     private fun createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
@@ -99,9 +129,10 @@ class MainActivity : AppCompatActivity() {
             val name = getString(R.string.channel_name)
             val descriptionText = getString(R.string.channel_description)
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel("1607", name, importance).apply {
+            val channel = NotificationChannel("1600", name, importance).apply {
                 description = descriptionText
             }
+
             // Register the channel with the system
             val notificationManager: NotificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -118,6 +149,19 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        val navController = findNavController(R.id.nav_host_fragment)
+        return when (item.itemId) {
+            R.id.action_settings -> {
+                navController.navigate(R.id.nav_options)
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun checkPermission() {

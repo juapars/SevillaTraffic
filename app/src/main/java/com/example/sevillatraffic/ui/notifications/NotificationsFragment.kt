@@ -5,20 +5,26 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListView
+import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.sevillatraffic.MainActivity
 import com.example.sevillatraffic.R
 import com.example.sevillatraffic.R.layout
 import com.example.sevillatraffic.adapter.AlarmReceiver
 import com.example.sevillatraffic.adapter.DownloadXmlTask
-import com.example.sevillatraffic.adapter.ListTrafficAdapter
-import com.example.sevillatraffic.databinding.FragmentNotificationsBinding
+import com.example.sevillatraffic.adapter.GlobalClass
+import com.example.sevillatraffic.adapter.MyAdapter
 import com.example.sevillatraffic.db.DBHelper
 import com.example.sevillatraffic.model.Route
 import com.example.sevillatraffic.model.Traffic
@@ -28,6 +34,12 @@ import kotlin.collections.ArrayList
 
 class NotificationsFragment : AppCompatDialogFragment() {
 
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewManager: RecyclerView.LayoutManager
+
+    private lateinit var global: GlobalClass
+
     private lateinit var notificationsViewModel: NewRouteViewModel
     private var lstTraffic: List<Traffic> = ArrayList()
     private var lstRoute: List<Route> = ArrayList()
@@ -35,6 +47,11 @@ class NotificationsFragment : AppCompatDialogFragment() {
     private var alarmMgr: AlarmManager? = null
     private lateinit var alarmIntent: PendingIntent
     private val fileUrl = "http://trafico.sevilla.org/estado-trafico-CGM.kml"
+
+    private var notDesc: String = ""
+    private var notFluide: String = ""
+    private var notModerate: String = ""
+    private var notIntense: String = ""
 
 
     override fun onCreateView(
@@ -48,6 +65,7 @@ class NotificationsFragment : AppCompatDialogFragment() {
 
         db = DBHelper(requireContext())
 
+        global = (activity?.application as GlobalClass)
 
 /*
         val binding: FragmentNotificationsBinding = DataBindingUtil.setContentView(
@@ -57,7 +75,7 @@ class NotificationsFragment : AppCompatDialogFragment() {
 
         // descargar aqui el archivo,hacer el refresh data, y setear aqui las alarmas
 
-       // DownloadXmlTask(db, requireContext()).execute(fileUrl)
+        if(db.allTraffic.isEmpty())  DownloadXmlTask(true, db, requireContext()).execute(fileUrl)
 
         alarmMgr = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmIntent = Intent(requireContext(), AlarmReceiver::class.java).let { intent ->
@@ -76,8 +94,20 @@ class NotificationsFragment : AppCompatDialogFragment() {
         return root
     }
 
-      private fun refreshData(traffic: ListView) {
-        lstTraffic = db.allTraffic // db.intenseTraffic
+      private fun refreshData(traffic: RecyclerView) {
+          // ((MyApplication) this.getApplication()).getSomeVariable();
+          var detector = (activity?.application as GlobalClass).get_enableDetectors()
+          var fluid = (activity?.application as GlobalClass).get_enableFluid()
+          Log.e("NOTIFICATION ESTADO", "$detector  cc $fluid")
+          Log.e("NOTIFICATION DOCE"," VEAMOS EL VALOR DE GLOBAL ${global.get_enableVoice()}")
+          lstTraffic = when {
+              global.get_enableDetectors() && global.get_enableFluid() -> db.allPermitedTraffic
+              global.get_enableDetectors() && !global.get_enableFluid() -> db.intenseTrafficDetectors
+              !global.get_enableDetectors() && !global.get_enableFluid() -> db.intenseTrafficOperator
+              else ->
+                  db.allPermitedTraffic
+          } //db.allTraffic
+
         lstRoute = db.allRoute
         var list: List<Traffic> = arrayListOf()
         for(r in lstRoute){
@@ -99,43 +129,89 @@ class NotificationsFragment : AppCompatDialogFragment() {
                     0
                 )?.plus(timer2?.get(1))?.toInt()!!)*/
 
-            Log.e("MARIHUANA ", (startSchedule < endSchedule).toString() + " Y" + r.placemarks)
+            Log.e("NOTIFICATION IF ", (startSchedule < endSchedule).toString() + " Y " +
+                    (Calendar.getInstance() < endSchedule).toString() +
+                    " Y " + r.placemarks + " Y " + (r.placemarks != "null") + " Y " + (r.placemarks != "") + " Y " + r.enabled)
 
-                if(r.placemarks != "null" && r.placemarks != "" && startSchedule < endSchedule) {
+                if(r.placemarks != "null" && r.placemarks != "" && startSchedule < endSchedule && Calendar.getInstance() < endSchedule
+                    && (r.enabled == "True" || r.enabled == "true")) {
 
-                // Set the alarm to start
-                val calendar: Calendar = Calendar.getInstance().apply {
-                    timeInMillis = System.currentTimeMillis()
-                    set(Calendar.HOUR_OF_DAY, schedule1[0].toInt())
-                    set(Calendar.MINUTE, schedule1[1].toInt())
-                }
+                    Log.e("NOTIFICATION"," ENTRA A SETEAR ALARMA ")
 
-                // setRepeating() lets you specify a precise custom interval--in this case,
-                // 2 minutes.
-                alarmMgr!!.setRepeating(
-                    AlarmManager.RTC_WAKEUP,
-                    calendar.timeInMillis,
-                    1000 * 60 * 2,
-                    alarmIntent
-                )
+                 // Set the alarm to start
+                    val calendar: Calendar = Calendar.getInstance().apply {
+                        timeInMillis = System.currentTimeMillis()
+                        set(Calendar.HOUR_OF_DAY, schedule1[0].toInt())
+                        set(Calendar.MINUTE, schedule1[1].toInt())
+                    }
 
-                var placemarks = parseString(r.placemarks)
-                for (t in lstTraffic) {
-                    for (a in placemarks) {
-                        if (a == t.id && !list.contains(t)) {
-                            list = list + t
+                    // setRepeating() lets you specify a precise custom interval--in this case,
+                    // 2 minutes.
+                    alarmMgr!!.setRepeating(
+                        AlarmManager.RTC_WAKEUP,
+                        calendar.timeInMillis,
+                        1000 * 60 * 2,
+                        alarmIntent
+                    )
+
+                    Log.e("NOTIFICATION","ESTAMOS DESPUES DE SETEAR ALARMMGR")
+
+                    var placemarks = parseString(r.placemarks)
+                    for (t in lstTraffic) {
+                        for (a in placemarks) {
+                            if (a == t.id && !list.contains(t)) {
+                                list = list + t
+                            }
                         }
                     }
+                }else{
+                    Log.e("NOTIFICATION ALARMA", "SE DESACTIVA LA ALARMA")
+                    alarmMgr?.cancel(alarmIntent)
                 }
-            }else{
-                Log.e("ALARMA", "SE DESACTIVA LA ALARMA")
+
+            if(lstRoute.isEmpty() || (r.enabled == "False" || r.enabled == "false")){
+                Log.e("NOTIFICATION ","  QUE SE CANCELE LA ALARMA YA ")
                 alarmMgr?.cancel(alarmIntent)
             }
         }
 
-        val adapter = ListTrafficAdapter(requireActivity(), list)
-        adapter.notifyDataSetChanged()
-        traffic.adapter = adapter
+          viewManager = LinearLayoutManager(requireContext())
+          viewAdapter = MyAdapter(list)
+
+          recyclerView = traffic.apply {
+              // use this setting to improve performance if you know that changes
+              // in content do not change the layout size of the RecyclerView
+              setHasFixedSize(true)
+
+              // use a linear layout manager
+              layoutManager = viewManager
+
+              // specify an viewAdapter (see also next example)
+              adapter = viewAdapter
+
+              addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+          }
+
+          for(tr in list){
+              if(tr.intensity?.contains("FLUIDO")!!) notFluide += tr.direction + ", "
+              if(tr.intensity?.contains("INTENSO")!!) notIntense += tr.direction + ", "
+              if(tr.intensity?.contains("MODERADO")!!) notModerate += tr.direction + ", "
+
+          }
+
+          if(notIntense.isNotEmpty()){
+              notDesc += "\n INTENSO: $notIntense."
+          }
+          if(notModerate.isNotEmpty()){
+              notDesc += "\n MODERADO: $notModerate."
+          }
+          if(notFluide.isNotEmpty()){
+              notDesc += "FLUIDO: $notFluide."
+          }
+
+          if(notDesc.isEmpty()) notDesc = "Tráfico fluido en tus rutas"
+
+
     }
 
     private fun parseString(list: String?): List<Int> {

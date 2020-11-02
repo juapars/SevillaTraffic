@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 
 class EditRouteViewModel : ViewModel() {
     private val _text = MutableLiveData<String>().apply {
-        value = "¡Bienvenido a SevillaTraffic! \n Elija como quiere definir su ruta:"
+        value = "Ponga nombre y horario a su ruta:"
     }
     val text: LiveData<String> = _text
 }

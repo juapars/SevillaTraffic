@@ -5,6 +5,7 @@ import android.app.TimePickerDialog.OnTimeSetListener
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -120,7 +121,7 @@ class EditRouteFragment : Fragment() {
                             routeOld.dest.toString(),
                             edt_notStart.text.toString(), edt_notEnd.text.toString(),
                             routeOld.placemarks.toString(),
-                            "True"
+                            routeOld.enabled.toString()
                         )
                         db.updateRoute(route)
                     } else {
@@ -150,7 +151,6 @@ class EditRouteFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(EditRouteViewModel::class.java)
-        // TODO: Use the ViewModel
     }
 
     private fun obtenerHora(edt: EditText) {
@@ -168,7 +168,7 @@ class EditRouteFragment : Fragment() {
             }, //Estos valores deben ir en ese orden
             //Al colocar en false se muestra en formato 12 horas y true en formato 24 horas
             //Pero el sistema devuelve la hora en formato 24 horas
-            hora, minuto, false
+            hora, minuto, true
         )
         recogerHora.show()
     }

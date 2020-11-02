@@ -16,7 +16,7 @@ class DBHelper(context: Context): SQLiteOpenHelper(context,
 ){
 
     companion object{
-        private val DATABASE_VER = 1
+        private val DATABASE_VER = 3
         private val DATABASE_NAME = "sevtrafdb.db"
 
         // Tabla RUTA
@@ -131,7 +131,7 @@ class DBHelper(context: Context): SQLiteOpenHelper(context,
     }
 
 
-    val allTraffic : List<Traffic>
+    val allTraffic : List<Traffic> //AllTraffic
         get(){
             val lstTraffic = ArrayList<Traffic>()
             val selectQuery = "SELECT * FROM $TABLE_NAME_T"
@@ -156,7 +156,82 @@ class DBHelper(context: Context): SQLiteOpenHelper(context,
             return lstTraffic
         }
 
-    val intenseTraffic : List<Traffic>
+    val trafficNotDetectors : List<Traffic>
+        get(){
+            val lstTraffic = ArrayList<Traffic>()
+            val selectQuery = "SELECT * FROM $TABLE_NAME_T  WHERE SOURCE NOT LIKE 'DETECTORES'"
+            val db = this.writableDatabase
+            val cursor = db.rawQuery(selectQuery,null)
+
+            if(cursor.moveToFirst()){
+                do{
+                    val traffic = Traffic()
+
+                    traffic.id = cursor.getInt(cursor.getColumnIndex(COL_ID_T))
+                    traffic.location = cursor.getString(cursor.getColumnIndex(COL_LOCATION))
+                    traffic.direction = cursor.getString(cursor.getColumnIndex(COL_DIRECTION))
+                    traffic.intensity = cursor.getString(cursor.getColumnIndex(COL_INTENSITY))
+                    traffic.source = cursor.getString(cursor.getColumnIndex(COL_SOURCE))
+
+                    lstTraffic.add(traffic)
+                }while(cursor.moveToNext())
+            }
+            db.close()
+
+            return lstTraffic
+        }
+
+    val allPermitedTraffic : List<Traffic>
+        get(){
+            val lstTraffic = ArrayList<Traffic>()
+            val selectQuery = "SELECT * FROM $TABLE_NAME_T WHERE (SOURCE LIKE 'DETECTORES') OR (SOURCE LIKE 'OPERADOR%')"
+            val db = this.writableDatabase
+            val cursor = db.rawQuery(selectQuery,null)
+
+            if(cursor.moveToFirst()){
+                do{
+                    val traffic = Traffic()
+
+                    traffic.id = cursor.getInt(cursor.getColumnIndex(COL_ID_T))
+                    traffic.location = cursor.getString(cursor.getColumnIndex(COL_LOCATION))
+                    traffic.direction = cursor.getString(cursor.getColumnIndex(COL_DIRECTION))
+                    traffic.intensity = cursor.getString(cursor.getColumnIndex(COL_INTENSITY))
+                    traffic.source = cursor.getString(cursor.getColumnIndex(COL_SOURCE))
+
+                    lstTraffic.add(traffic)
+                }while(cursor.moveToNext())
+            }
+            db.close()
+
+            return lstTraffic
+        }
+
+    val intenseTrafficDetectors : List<Traffic>
+        get(){
+            val lstTraffic = ArrayList<Traffic>() //LIKE '%INTENSO' OR INTENSITY LIKE 'INTENSO%' OR INTENSITY LIKE 'MODERADO'
+            val selectQuery = "SELECT * FROM $TABLE_NAME_T WHERE (SOURCE LIKE 'OPERADOR%' OR SOURCE LIKE 'DETECTORES') AND (INTENSITY LIKE '%INTENSO' OR INTENSITY LIKE 'INTENSO%' OR INTENSITY LIKE 'MODERADO')"
+            val db = this.writableDatabase
+            val cursor = db.rawQuery(selectQuery,null)
+
+            if(cursor.moveToFirst()){
+                do{
+                    val traffic = Traffic()
+
+                    traffic.id = cursor.getInt(cursor.getColumnIndex(COL_ID_T))
+                    traffic.location = cursor.getString(cursor.getColumnIndex(COL_LOCATION))
+                    traffic.direction = cursor.getString(cursor.getColumnIndex(COL_DIRECTION))
+                    traffic.intensity = cursor.getString(cursor.getColumnIndex(COL_INTENSITY))
+                    traffic.source = cursor.getString(cursor.getColumnIndex(COL_SOURCE))
+
+                    lstTraffic.add(traffic)
+                }while(cursor.moveToNext())
+            }
+            db.close()
+
+            return lstTraffic
+        }
+
+    val intenseTrafficOperator : List<Traffic>
         get(){
             val lstTraffic = ArrayList<Traffic>() //LIKE '%INTENSO' OR INTENSITY LIKE 'INTENSO%' OR INTENSITY LIKE 'MODERADO'
             val selectQuery = "SELECT * FROM $TABLE_NAME_T WHERE (SOURCE LIKE 'OPERADOR%') AND (INTENSITY LIKE '%INTENSO' OR INTENSITY LIKE 'INTENSO%' OR INTENSITY LIKE 'MODERADO')"
@@ -180,6 +255,7 @@ class DBHelper(context: Context): SQLiteOpenHelper(context,
 
             return lstTraffic
         }
+
 
     fun addTraffic(traffic: Traffic) {
         val db = this.writableDatabase

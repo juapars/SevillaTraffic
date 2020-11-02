@@ -223,7 +223,7 @@ class ManualRouteFragment : Fragment() {
             ?.checkLocationSettings(mLocationSettingsRequest)
             ?.addOnSuccessListener(this.requireActivity()) {
                 Log.i(TAG, "All location settings are satisfied.")
-                Toast.makeText(context, "Started location updates!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Registro de ubicaciones empezado", Toast.LENGTH_SHORT).show()
                 if (ActivityCompat.checkSelfPermission(this.requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(this.requireActivity(),arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),1)
                 }

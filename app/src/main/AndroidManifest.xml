@@ -17,6 +17,7 @@
 
 
     <application
+        android:name=".adapter.GlobalClass"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -53,9 +54,14 @@
         </activity>
 
         <receiver
-            android:process=":remote"
             android:name=".adapter.AlarmReceiver" />
 
+        <activity
+            android:name=".adapter.VoiceAct"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            />
+
+        <service android:name=".adapter.VoiceService" />
     </application>
 
 </manifest>

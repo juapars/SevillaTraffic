@@ -14,13 +14,12 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sevillatraffic.R
-import com.example.sevillatraffic.databinding.FragmentNotificationsBinding
-import com.example.sevillatraffic.databinding.RowTrafficLayoutBinding
 import com.example.sevillatraffic.db.DBHelper
 import com.example.sevillatraffic.model.Route
 import com.example.sevillatraffic.model.Traffic
 import kotlinx.android.synthetic.main.row_layout.view.*
 import kotlinx.android.synthetic.main.row_traffic_layout.view.*
+
 
 class ListTrafficAdapter(activity: Activity, var lstTraffic: List<Traffic>): BaseAdapter() {
 
@@ -29,8 +28,6 @@ class ListTrafficAdapter(activity: Activity, var lstTraffic: List<Traffic>): Bas
     private var act = activity
     internal lateinit var db: DBHelper
     private lateinit var name : String
-    private var _binding: RowTrafficLayoutBinding? = null
-    private val binding get() = _binding!!
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
 

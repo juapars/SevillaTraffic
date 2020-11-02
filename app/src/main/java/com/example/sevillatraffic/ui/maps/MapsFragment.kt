@@ -174,7 +174,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
                             for(traffic in lstTraffic){
                                 val latlong = traffic.location?.split(",")
-                                var loc = LatLng(latlong?.get(1)?.toDouble()!!, latlong?.get(0)?.toDouble())
+                                Log.e("AWA"," POR QUE FALLA AHORA $latlong Y ESTO QUE  ")
+                                var loc = LatLng(latlong?.get(1)?.toDouble()!!, latlong.get(0).toDouble())
 
                                 if(isLocationOnPath(loc, polyl, false, 20.0)){
                                     if(lstPlacemarks.isEmpty()) lstPlacemarks += traffic.id
