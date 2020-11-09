@@ -22,10 +22,8 @@ class DownloadXmlTask(var first:Boolean, var db: DBHelper, var context: Context)
         return try {
             var stream: InputStream? = null
             try {
-                Log.e("DESCARGA ARCHIVO","EMPIEZA")
                 stream =  downloadUrl("http://trafico.sevilla.org/estado-trafico-CGM.kml")
                 if (stream != null) {
-                    Log.e("DESCARGA ARCHIVO","eENTRA A LOAD TRAFFIC")
                     loadTraffic(stream)
                 }
 
@@ -51,7 +49,7 @@ class DownloadXmlTask(var first:Boolean, var db: DBHelper, var context: Context)
             0 ->
                 Log.e("DESCARGA ARCHIVO","SE HA DESCARGADO")
 
-            1 ->                     // TODO: Mostrar los mensajes de error en el lugar oportuno
+            1 ->
                 Log.w(this.javaClass.name, "Error de conexión")
             2 -> Log.w(this.javaClass.name, "Error en los datos")
         }
@@ -105,8 +103,6 @@ class DownloadXmlTask(var first:Boolean, var db: DBHelper, var context: Context)
             fecha[2].split("/")[0].toInt(),
             fecha[3].split(":")[0].toInt(),
             fecha[3].split(":")[1].toInt())
-
-        //cojc.compareTo(Calendar.getInstance())  Compara lo de dentro con lo de fuera, 0 si son iguales, 1 si lo de dentro es despues, y -1 si es antes
 
 
         Log.e("DESCARGA ARCHIVO ", "EL TITULO ES ${cojc.time} y la actual es ${Calendar.getInstance().time}")

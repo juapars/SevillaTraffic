@@ -8,18 +8,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.sevillatraffic.R
 import com.example.sevillatraffic.adapter.ListRouteAdapter
 import com.example.sevillatraffic.db.DBHelper
 import com.example.sevillatraffic.model.Route
-import com.example.sevillatraffic.model.Traffic
 
 class MyRoutesFragment : Fragment() {
 
-    private var lstRoutes: List<Route> = ArrayList<Route>()
-    private var lstTraffic: List<Traffic> = ArrayList()
+    private var lstRoutes: List<Route> = ArrayList()
     private lateinit var viewModel: MyRoutesViewModel
     internal lateinit var db: DBHelper
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewManager: RecyclerView.LayoutManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,15 +46,25 @@ class MyRoutesFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(MyRoutesViewModel::class.java)
-        // TODO: Use the ViewModel
     }
 
 
-    private fun refreshData(routes: ListView) {
+    private fun refreshData(routes: RecyclerView) {
         lstRoutes = db.allRoute
-        val adapter = ListRouteAdapter(requireActivity(), lstRoutes, this)
-        adapter.notifyDataSetChanged()
-        routes.adapter = adapter
+        viewManager = LinearLayoutManager(requireContext())
+        viewAdapter = ListRouteAdapter(requireActivity(),lstRoutes,findNavController())
+
+        recyclerView = routes.apply {
+
+            setHasFixedSize(true)
+
+            layoutManager = viewManager
+
+            // specify an viewAdapter (see also next example)
+            adapter = viewAdapter
+
+            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        }
     }
 
 

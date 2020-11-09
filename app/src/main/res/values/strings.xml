@@ -7,11 +7,24 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Opciones</string>
 
+    <string name="app_info_title">Información</string>
     <string name="app_info">Información sobre la aplicación</string>
 
     <string name="opt_detectors">Notificaciones de detectores</string>
+    <string name="opt_detectors_sumOn">Se mostrarán notificaciones basadas en detectores</string>
+    <string name="opt_detectors_sumOff">Solo se mostrarán notificaciones verificadas por operadores</string>
+
     <string name="txt_opt_fluid">Notificaciones fluidez</string>
+    <string name="txt_opt_fluid_sumOn">Se mostrarán notificaciones sobre la fluidez de los tramos</string>
+    <string name="txt_opt_fluid_sumOff">Solo se mostrarán notificaciones de trafico intenso o moderado</string>
+
     <string name="txt_opt_voice">Notificaciones con voz</string>
+    <string name="txt_opt_voice_sumOn">Las notificaciones se leerán con voz</string>
+    <string name="txt_opt_voice_sumOff">Las notificaciones no se leerán con voz</string>
+
+    <string name="txt_opt_voiceCar"></string>
+    <string name="txt_opt_voiceCar_sumOn">Siempre se leerán por voz las notificaciones</string>
+    <string name="txt_opt_voiceCar_sumOff">Solo se leerán por voz al estar conectadas a un dispositivo</string>
 
     <string name="app_info_description">
         v1.0.0\nSevillaTraffic es una aplicación para la notificación del tráfico en Sevilla con rutas personalizadas.\n
@@ -53,14 +66,14 @@
     <string name="channel_description">Esto es SevillaTraffic</string>
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
+    <string name="sync_header">Notificaciones</string>
 
     <!-- Messages Preferences -->
     <string name="signature_title">Your signature</string>
     <string name="reply_title">Default reply action</string>
 
     <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
+    <string name="not_options">Notificaciones</string>
     <string name="attachment_title">Download incoming attachments</string>
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>

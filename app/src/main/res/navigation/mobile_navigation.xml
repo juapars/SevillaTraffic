@@ -18,6 +18,10 @@
             android:id="@+id/action_nav_notifications_to_nav_my_routes"
             app:destination="@id/nav_my_routes"
             app:popUpTo="@id/nav_notifications" />
+        <action
+            android:id="@+id/action_nav_notifications_to_nav_options"
+            app:destination="@id/nav_options"
+            app:popUpTo="@id/nav_notifications" />
     </fragment>
 
     <fragment
@@ -86,9 +90,14 @@
 
     <fragment
         android:id="@+id/nav_options"
-        android:name="com.example.sevillatraffic.ui.options.OptionsFragment"
-        android:label="@string/menu_myRoutes"
-        tools:layout="@layout/options_fragment" />
+        android:name="com.example.sevillatraffic.ui.options.SettingsFragment"
+        android:label="@string/menu_options"
+         >
+        <action
+            android:id="@+id/action_nav_options_to_nav_notifications2"
+            app:destination="@id/nav_notifications"
+            app:popUpTo="@id/nav_notifications" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_app_info"

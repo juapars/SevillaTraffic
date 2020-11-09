@@ -2,9 +2,12 @@ package com.example.sevillatraffic.ui.googleRoute
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -25,9 +28,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.sevillatraffic.MainActivity
 import com.example.sevillatraffic.R
 import com.google.android.gms.location.*
-import com.google.android.gms.maps.model.LatLng
 import com.karumi.dexter.BuildConfig
-import kotlinx.android.synthetic.main.edit_route_fragment.*
 
 
 class GoogleRouteFragment : Fragment() {
@@ -37,33 +38,16 @@ class GoogleRouteFragment : Fragment() {
     private lateinit var btnSearch: Button
     private lateinit var txtOrigin: EditText
     private lateinit var txtDestination: EditText
-    // location last updated time
-    private var mLastUpdateTime: String? = null
 
-    // bunch of location related apis
     private var mFusedLocationClient: FusedLocationProviderClient? = null
     private var mSettingsClient: SettingsClient? = null
-    private var mLocationRequest: LocationRequest? = null
-    private var mLocationSettingsRequest: LocationSettingsRequest? = null
     private var mLocationCallback: LocationCallback? = null
     private var mCurrentLocation: Location? = null
-    // boolean flag to toggle the ui
     private var mRequestingLocationUpdates: Boolean? = null
-
-    private var listLocation = arrayListOf<LatLng>()
-    //mutableMapOf<Double,Double>()
 
 
     companion object {
         private val TAG = MainActivity::class.java.simpleName
-
-        // location updates interval - 10sec
-        private const val UPDATE_INTERVAL_IN_MILLISECONDS: Long = 10000
-
-        // fastest updates interval - 5 sec
-        // location updates will be received if another app is requesting the locations
-        // than your app can handle
-        private const val FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS: Long = 5000
         private const val REQUEST_CHECK_SETTINGS = 100
     }
 
@@ -91,6 +75,7 @@ class GoogleRouteFragment : Fragment() {
             }
         }
 
+
         btnSearch.setOnClickListener{
             when {
                 TextUtils.isEmpty(txtOrigin.text) -> {
@@ -107,6 +92,15 @@ class GoogleRouteFragment : Fragment() {
                         Toast.LENGTH_LONG
                     ).show()
                 }
+
+                getConnectivityStatusString(requireContext()) == 0 -> {
+                    Toast.makeText(
+                        requireContext(),
+                        "Necesitas tener conexión a Internet para realizar la búsqueda",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+
                 else -> {
                     val datosAEnviar = Bundle()
                     datosAEnviar.putString("txtOrigin", txtOrigin.text.toString())
@@ -127,8 +121,10 @@ class GoogleRouteFragment : Fragment() {
 
     fun showLastKnownLocation() {
         if (mCurrentLocation != null) {
-            Toast.makeText(context, "Lat: " + mCurrentLocation!!.latitude
-                    + ", Lng: " + mCurrentLocation!!.longitude, Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                context, "Lat: " + mCurrentLocation!!.latitude
+                        + ", Lng: " + mCurrentLocation!!.longitude, Toast.LENGTH_LONG
+            ).show()
         } else {
             Toast.makeText(context, "Last known location is not available!", Toast.LENGTH_SHORT).show()
         }
@@ -138,7 +134,10 @@ class GoogleRouteFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             REQUEST_CHECK_SETTINGS -> when (resultCode) {
-                Activity.RESULT_OK -> Log.e(TAG, "User agreed to make required location settings changes.")
+                Activity.RESULT_OK -> Log.e(
+                    TAG,
+                    "User agreed to make required location settings changes."
+                )
                 Activity.RESULT_CANCELED -> {
                     Log.e(TAG, "User chose not to make required location settings changes.")
                     mRequestingLocationUpdates = false
@@ -150,16 +149,41 @@ class GoogleRouteFragment : Fragment() {
     private fun openSettings() {
         val intent = Intent()
         intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-        val uri = Uri.fromParts("package",
-            BuildConfig.APPLICATION_ID, null)
+        val uri = Uri.fromParts(
+            "package",
+            BuildConfig.APPLICATION_ID, null
+        )
         intent.data = uri
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
     }
 
+    private fun getConnectivityStatusString(context: Context): Int? {
+        Log.e("GOOGLE CONNECTIVITY","ENTRAMOS EN METODO")
+        var status = 0
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
+        Log.e("GOOGLE CONNECTIVITY","VALOR ACTIVE NETWORK $activeNetwork")
+        if (activeNetwork != null) {
+            Log.e("GOOGLE CONNECTIVITY","VALOR ACTIVE TIPO ${activeNetwork.type} CUANDO WIFI ES ${ConnectivityManager.TYPE_WIFI} Y " +
+                    " ${ConnectivityManager.TYPE_MOBILE}")
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                status = 1
+            } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+                status = 2
+            }
+        } else {
+            status = 0
+        }
+
+        Log.e("GOOGLE CONNECTIVITY"," CUAL ES EL STATUS $status")
+        return status
+    }
     private fun checkPermissions(): Boolean {
-        val permissionState: Int = ActivityCompat.checkSelfPermission(this.requireContext(),
-            Manifest.permission.ACCESS_FINE_LOCATION)
+        val permissionState: Int = ActivityCompat.checkSelfPermission(
+            this.requireContext(),
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
         return permissionState == PackageManager.PERMISSION_GRANTED
     }
 

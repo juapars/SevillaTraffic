@@ -1,60 +1,75 @@
 package com.example.sevillatraffic.adapter
 
-import android.app.Activity
 import android.content.Context
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.Button
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sevillatraffic.R
-import com.example.sevillatraffic.db.DBHelper
-import com.example.sevillatraffic.model.Route
 import com.example.sevillatraffic.model.Traffic
-import kotlinx.android.synthetic.main.row_layout.view.*
 import kotlinx.android.synthetic.main.row_traffic_layout.view.*
 
 
-class ListTrafficAdapter(activity: Activity, var lstTraffic: List<Traffic>): BaseAdapter() {
+class ListTrafficAdapter(private val myDataset: List<Traffic>) : RecyclerView.Adapter<ListTrafficAdapter.MyViewHolder>() {
 
-    private var inflater: LayoutInflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-    private var pos: Int = 0
-    private var act = activity
-    internal lateinit var db: DBHelper
-    private lateinit var name : String
-
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+    lateinit var context : Context
 
 
-        val rowView: View = inflater.inflate(R.layout.row_traffic_layout, null)
-        db = DBHelper(act)
-        pos = position
-        rowView.txt_direction.text = lstTraffic[position].direction.toString()
-        rowView.txt_intensity.text = lstTraffic[position].intensity.toString()
+    class MyViewHolder(val textView: View) : RecyclerView.ViewHolder(textView)
 
-        this.notifyDataSetChanged()
-        return rowView
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): MyViewHolder {
+        context = parent.context
+        val rawView = LayoutInflater.from(parent.context)
+            .inflate(R.layout.row_traffic_layout, parent, false)
+        rawView.layoutParams = RecyclerView.LayoutParams(1000, 400)
+        rawView.setPadding(20, 20, 0, 20)
+
+        return MyViewHolder(rawView)
     }
 
-    override fun getItem(position: Int): Any {
-        return lstTraffic[position]
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        var direc = myDataset[position].direction?.replace(">","➤")
+        holder.textView.txt_direction.text = direc
+        holder.textView.txt_intensity.text = myDataset[position].intensity
+
+        var detector = ContextCompat.getDrawable(context, R.drawable.ic_baseline_info_24)
+        var operator = ContextCompat.getDrawable(context, R.drawable.ic_baseline_how_to_reg_24)
+
+
+        if(myDataset[position].source?.contains("OPERADOR")!!){
+            holder.textView.btn_traffic.background = operator
+            holder.textView.btn_traffic.setOnClickListener {
+                val alertDialog: AlertDialog.Builder = AlertDialog.Builder(context,R.style.RightJustifyDialogWindowTitle)
+
+                alertDialog.setTitle("Notificación de operador")
+                alertDialog.setMessage("Este icono indica que esta notificación de tráfico ha sido confirmada por un operador," +
+                        " es decir, que es fiable al 100% que existe tráfico en este tramo.")
+
+                alertDialog.setNegativeButton("De acuerdo"){ dialog, which -> }
+                alertDialog.show()
+            }
+        }else if(myDataset[position].source?.contains("DETECTORES")!!){
+            holder.textView.btn_traffic.background = detector
+
+            holder.textView.btn_traffic.setOnClickListener {
+                val alertDialog: AlertDialog.Builder = AlertDialog.Builder(context,R.style.RightJustifyDialogWindowTitle)
+
+                alertDialog.setTitle("Notificación de detector")
+                alertDialog.setMessage("Este icono indica que esta notificación de tráfico ha sido originada por un detector," +
+                        " es decir, que al no estar confirmada por un operador, no podemos confirmar que exista realmente tráfico" +
+                        " en este tramo, aunque por lo general es bastante probable.")
+
+                alertDialog.setNegativeButton("De acuerdo"){ dialog, which -> }
+                alertDialog.show()
+            }
+
+        }
     }
 
-    override fun getItemId(position: Int): Long {
-        return lstTraffic[position].id.toLong()
-    }
-
-    override fun getCount(): Int {
-        return lstTraffic.size
-    }
-
-    fun getPosition(): Int{
-        return pos
-    }
+    override fun getItemCount() = myDataset.size
 }

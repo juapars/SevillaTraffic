@@ -15,7 +15,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -65,18 +64,13 @@ class ManualRouteFragment : Fragment() {
     private var listLocation = arrayListOf<LatLng>()
 
     private var buttons_toggle = 0
-    //mutableMapOf<Double,Double>()
 
 
     companion object {
         private val TAG = MainActivity::class.java.simpleName
 
-        // location updates interval - 10sec
         private const val UPDATE_INTERVAL_IN_MILLISECONDS: Long = 10000
 
-        // fastest updates interval - 5 sec
-        // location updates will be received if another app is requesting the locations
-        // than your app can handle
         private const val FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS: Long = 5000
         private const val REQUEST_CHECK_SETTINGS = 100
     }
@@ -213,8 +207,6 @@ class ManualRouteFragment : Fragment() {
                 button.isEnabled = true
             }
         }
-
-
     }
 
 
@@ -290,12 +282,13 @@ class ManualRouteFragment : Fragment() {
 
     private fun stopLocationUpdates() {
         // Removing location updates
-        mFusedLocationClient
-            ?.removeLocationUpdates(mLocationCallback)
-            ?.addOnCompleteListener(this.requireActivity()) {
-                Toast.makeText(context, "Actualización de estado detenida.", Toast.LENGTH_SHORT).show()
-                toggleButtons()
-            }
+            mFusedLocationClient
+                ?.removeLocationUpdates(mLocationCallback)
+                ?.addOnCompleteListener(this.requireActivity()) {
+                    //Toast.makeText(context, "Actualización de estado detenida.", Toast.LENGTH_SHORT).show()
+                    toggleButtons()
+                }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -345,5 +338,6 @@ class ManualRouteFragment : Fragment() {
             stopLocationUpdates()
         }
     }
+
 
 }

@@ -23,17 +23,19 @@
         android:id="@+id/txt_origin"
         android:layout_width="298dp"
         android:layout_height="35dp"
+        android:gravity="center_vertical"
         android:text="Origen"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.142"
+        app:layout_constraintHorizontal_bias="0.141"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_date" />
 
     <TextView
         android:id="@+id/txt_date"
-        android:layout_width="137dp"
-        android:layout_height="18dp"
+        android:layout_width="143dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="4dp"
         android:text="Eddy"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintEnd_toEndOf="parent"
@@ -48,20 +50,21 @@
         android:text="De 09:00 a 10:00"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_enable"
-        app:layout_constraintHorizontal_bias="0.104"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.064"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_dest"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/txt_dest"
-        android:layout_width="304dp"
-        android:layout_height="32dp"
+        android:layout_width="284dp"
+        android:layout_height="30dp"
+        android:gravity="center_vertical"
         android:text="Destino"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.144"
+        app:layout_constraintHorizontal_bias="0.125"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_origin" />
 
@@ -89,10 +92,10 @@
 
     <Switch
         android:id="@+id/btn_enable"
-        android:layout_width="58dp"
-        android:layout_height="31dp"
+        android:layout_width="43dp"
+        android:layout_height="28dp"
         android:layout_marginTop="104dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

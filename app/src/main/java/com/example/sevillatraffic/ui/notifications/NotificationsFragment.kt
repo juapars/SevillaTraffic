@@ -2,29 +2,28 @@ package com.example.sevillatraffic.ui.notifications
 
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothProfile
+import android.bluetooth.BluetoothProfile.ServiceListener
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings
-import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.sevillatraffic.MainActivity
 import com.example.sevillatraffic.R
 import com.example.sevillatraffic.R.layout
 import com.example.sevillatraffic.adapter.AlarmReceiver
 import com.example.sevillatraffic.adapter.DownloadXmlTask
-import com.example.sevillatraffic.adapter.GlobalClass
-import com.example.sevillatraffic.adapter.MyAdapter
+import com.example.sevillatraffic.adapter.ListTrafficAdapter
 import com.example.sevillatraffic.db.DBHelper
 import com.example.sevillatraffic.model.Route
 import com.example.sevillatraffic.model.Traffic
@@ -37,8 +36,6 @@ class NotificationsFragment : AppCompatDialogFragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
-
-    private lateinit var global: GlobalClass
 
     private lateinit var notificationsViewModel: NewRouteViewModel
     private var lstTraffic: List<Traffic> = ArrayList()
@@ -53,6 +50,40 @@ class NotificationsFragment : AppCompatDialogFragment() {
     private var notModerate: String = ""
     private var notIntense: String = ""
 
+    private var detec: Boolean = false
+    private var fluid: Boolean = false
+    private var voice: Boolean = false
+
+    private var bluetooth = false
+
+    private lateinit var name: String
+    private lateinit var address: String
+    private lateinit var threadName: String
+
+    private fun checkConnected() {
+        BluetoothAdapter.getDefaultAdapter().getProfileProxy(requireContext(), serviceListener, BluetoothProfile.HEADSET)
+
+        var n = BluetoothAdapter.getDefaultAdapter().getProfileConnectionState(BluetoothProfile.HEADSET)
+
+        bluetooth = n ==2
+    }
+    private var serviceListener: ServiceListener = object : ServiceListener {
+        override fun onServiceDisconnected(profile: Int) {}
+        override fun onServiceConnected(profile: Int, proxy: BluetoothProfile) {
+            for (device in proxy.connectedDevices) {
+                name = device.name
+                address = device.address
+                threadName = Thread.currentThread().name
+
+                Log.e("NOTIFICACIONES EXTRA", "|" + device.name + " | " + device.address + " | " +
+                        proxy.getConnectionState(device) + "(connected = "
+                        + BluetoothProfile.STATE_CONNECTED + ")"
+                )
+
+            }
+            BluetoothAdapter.getDefaultAdapter().closeProfileProxy(profile, proxy)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -63,19 +94,16 @@ class NotificationsFragment : AppCompatDialogFragment() {
                 ViewModelProviders.of(this).get(NewRouteViewModel::class.java)
         val root = inflater.inflate(layout.fragment_notifications, container, false)
 
+        checkConnected()
+
         db = DBHelper(requireContext())
 
-        global = (activity?.application as GlobalClass)
-
-/*
-        val binding: FragmentNotificationsBinding = DataBindingUtil.setContentView(
-            this, R.layout.activity_main)
-
-        binding.user = User("Test", "User")*/
-
-        // descargar aqui el archivo,hacer el refresh data, y setear aqui las alarmas
-
         if(db.allTraffic.isEmpty())  DownloadXmlTask(true, db, requireContext()).execute(fileUrl)
+
+        val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        detec = prefs.getBoolean("detectors", false)
+        fluid = prefs.getBoolean("fluid", false)
+        voice = prefs.getBoolean("voice", false)
 
         alarmMgr = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmIntent = Intent(requireContext(), AlarmReceiver::class.java).let { intent ->
@@ -95,15 +123,14 @@ class NotificationsFragment : AppCompatDialogFragment() {
     }
 
       private fun refreshData(traffic: RecyclerView) {
-          // ((MyApplication) this.getApplication()).getSomeVariable();
-          var detector = (activity?.application as GlobalClass).get_enableDetectors()
-          var fluid = (activity?.application as GlobalClass).get_enableFluid()
-          Log.e("NOTIFICATION ESTADO", "$detector  cc $fluid")
-          Log.e("NOTIFICATION DOCE"," VEAMOS EL VALOR DE GLOBAL ${global.get_enableVoice()}")
+        //  var detector = (activity?.application as GlobalClass).get_enableDetectors()
+        //  var fluid = (activity?.application as GlobalClass).get_enableFluid()
+          Log.e("NOTIFICATION ESTADO", "$detec  cc $fluid")
+          Log.e("NOTIFICATION DOCE", " VEAMOS EL VALOR DE GLOBAL ${voice}")
           lstTraffic = when {
-              global.get_enableDetectors() && global.get_enableFluid() -> db.allPermitedTraffic
-              global.get_enableDetectors() && !global.get_enableFluid() -> db.intenseTrafficDetectors
-              !global.get_enableDetectors() && !global.get_enableFluid() -> db.intenseTrafficOperator
+              detec && fluid -> db.allPermitedTraffic
+              detec && !fluid -> db.intenseTrafficDetectors
+              !detec && !fluid -> db.intenseTrafficOperator
               else ->
                   db.allPermitedTraffic
           } //db.allTraffic
@@ -111,7 +138,7 @@ class NotificationsFragment : AppCompatDialogFragment() {
         lstRoute = db.allRoute
         var list: List<Traffic> = arrayListOf()
         for(r in lstRoute){
-            var time = Date()
+
             var schedule1 = r.notStart?.split(":")
                 var startSchedule = Calendar.getInstance()
                     startSchedule.set(Calendar.HOUR_OF_DAY, schedule1?.get(0)?.toInt()!!)
@@ -122,21 +149,12 @@ class NotificationsFragment : AppCompatDialogFragment() {
                 endSchedule.set(Calendar.HOUR_OF_DAY, schedule2?.get(0)?.toInt()!!)
                 endSchedule.set(Calendar.MINUTE, schedule2[1].toInt())
 
-            /*(timer?.get(0)?.plus(timer?.get(1))?.toInt()!! < time.hours.toString().plus(
-                    time.minutes.toString()
-                ).toInt()
-                        && time.hours.toString().plus(time.minutes.toString()).toInt() < timer2?.get(
-                    0
-                )?.plus(timer2?.get(1))?.toInt()!!)*/
+            Log.e("NOTIFICACIONES EXTRA 2", "FUNCIONA EL METODO $bluetooth")
 
-            Log.e("NOTIFICATION IF ", (startSchedule < endSchedule).toString() + " Y " +
-                    (Calendar.getInstance() < endSchedule).toString() +
-                    " Y " + r.placemarks + " Y " + (r.placemarks != "null") + " Y " + (r.placemarks != "") + " Y " + r.enabled)
 
-                if(r.placemarks != "null" && r.placemarks != "" && startSchedule < endSchedule && Calendar.getInstance() < endSchedule
+            if(r.placemarks != "null" && r.placemarks != "" && startSchedule < endSchedule && Calendar.getInstance() < endSchedule
                     && (r.enabled == "True" || r.enabled == "true")) {
 
-                    Log.e("NOTIFICATION"," ENTRA A SETEAR ALARMA ")
 
                  // Set the alarm to start
                     val calendar: Calendar = Calendar.getInstance().apply {
@@ -154,7 +172,6 @@ class NotificationsFragment : AppCompatDialogFragment() {
                         alarmIntent
                     )
 
-                    Log.e("NOTIFICATION","ESTAMOS DESPUES DE SETEAR ALARMMGR")
 
                     var placemarks = parseString(r.placemarks)
                     for (t in lstTraffic) {
@@ -170,20 +187,17 @@ class NotificationsFragment : AppCompatDialogFragment() {
                 }
 
             if(lstRoute.isEmpty() || (r.enabled == "False" || r.enabled == "false")){
-                Log.e("NOTIFICATION ","  QUE SE CANCELE LA ALARMA YA ")
                 alarmMgr?.cancel(alarmIntent)
             }
         }
 
           viewManager = LinearLayoutManager(requireContext())
-          viewAdapter = MyAdapter(list)
+          viewAdapter = ListTrafficAdapter(list)
 
           recyclerView = traffic.apply {
-              // use this setting to improve performance if you know that changes
-              // in content do not change the layout size of the RecyclerView
+
               setHasFixedSize(true)
 
-              // use a linear layout manager
               layoutManager = viewManager
 
               // specify an viewAdapter (see also next example)

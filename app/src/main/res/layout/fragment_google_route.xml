@@ -9,7 +9,7 @@
     <TextView
         android:id="@+id/text_googleRoute"
         android:layout_width="378dp"
-        android:layout_height="69dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="52dp"
         android:layout_marginEnd="8dp"
@@ -22,8 +22,9 @@
 
     <EditText
         android:id="@+id/lct_start"
+        style="@style/Widget.AppCompat.AutoCompleteTextView"
         android:layout_width="310dp"
-        android:layout_height="56dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
         android:ems="10"
         android:hint="Origen"
@@ -35,7 +36,7 @@
     <EditText
         android:id="@+id/lct_end"
         android:layout_width="308dp"
-        android:layout_height="57dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
         android:ems="10"
         android:hint="Destino"
@@ -49,8 +50,9 @@
 
     <Button
         android:id="@+id/btn_search"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="165dp"
-        android:layout_height="59dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="228dp"
         android:text="@string/btn_search"
         app:layout_constraintBottom_toBottomOf="parent"

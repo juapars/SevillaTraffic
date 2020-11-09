@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.editRoute.EditRouteFragment">
 
+
     <EditText
         android:id="@+id/edt_name"
         android:layout_width="wrap_content"
@@ -51,10 +52,12 @@
 
     <ImageButton
         android:id="@+id/ib_notStart"
+        style="@android:style/Widget.DeviceDefault.ImageButton"
         android:layout_width="61dp"
         android:layout_height="46dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="60dp"
+        android:backgroundTint="@color/colorPrimary"
         android:src="@drawable/ic_baseline_access_time_white_24"
         app:layout_constraintEnd_toStartOf="@+id/edt_notEnd"
         app:layout_constraintTop_toBottomOf="@+id/txt_notStart"
@@ -63,7 +66,7 @@
     <EditText
         android:id="@+id/edt_notEnd"
         android:layout_width="71dp"
-        android:layout_height="44dp"
+        android:layout_height="0dp"
         android:layout_marginTop="17dp"
         android:layout_marginEnd="8dp"
         android:ems="10"
@@ -74,10 +77,12 @@
 
     <ImageButton
         android:id="@+id/ib_notEnd"
+        style="@style/Widget.AppCompat.ImageButton"
         android:layout_width="63dp"
         android:layout_height="47dp"
         android:layout_marginTop="82dp"
         android:layout_marginEnd="20dp"
+        android:backgroundTint="@color/colorPrimary"
         android:src="@drawable/ic_baseline_access_time_white_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_not"
@@ -89,6 +94,7 @@
         android:layout_height="40dp"
         android:layout_marginTop="45dp"
         android:text="@string/txt_not"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -96,9 +102,11 @@
 
     <Button
         android:id="@+id/btn_save"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="129dp"
         android:layout_height="58dp"
         android:layout_marginTop="57dp"
+        android:backgroundTint="@color/colorAccent"
         android:text="@string/btn_save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -112,6 +120,7 @@
         android:layout_height="22dp"
         android:layout_marginTop="48dp"
         android:text="@string/txt_notStart"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintEnd_toStartOf="@+id/txt_notEnd"
         app:layout_constraintHorizontal_bias="0.371"
         app:layout_constraintStart_toStartOf="parent"
@@ -120,10 +129,11 @@
     <TextView
         android:id="@+id/txt_notEnd"
         android:layout_width="54dp"
-        android:layout_height="17dp"
+        android:layout_height="0dp"
         android:layout_marginTop="48dp"
-        android:layout_marginEnd="84dp"
+        android:layout_marginEnd="104dp"
         android:text="@string/txt_notEnd"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_not" />
 

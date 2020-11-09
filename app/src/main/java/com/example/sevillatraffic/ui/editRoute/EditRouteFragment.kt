@@ -33,14 +33,14 @@ class EditRouteFragment : Fragment() {
     companion object {
         fun newInstance() = EditRouteFragment()
     }
-    private var lstRoutes: List<Route> = ArrayList<Route>()
+
     private lateinit var viewModel: EditRouteViewModel
-    internal lateinit var db: DBHelper
+    private lateinit var db: DBHelper
     private val CERO = "0"
     private val DOS_PUNTOS = ":"
     private val c = Calendar.getInstance()
-    private val hora: Int = c.get(Calendar.HOUR_OF_DAY)
-    private val minuto: Int = c.get(Calendar.MINUTE)
+    private val hour: Int = c.get(Calendar.HOUR_OF_DAY)
+    private val minute: Int = c.get(Calendar.MINUTE)
 
     private lateinit var notStart: EditText
     private lateinit var ibStart: ImageButton
@@ -82,10 +82,10 @@ class EditRouteFragment : Fragment() {
         }
 
         ibStart.setOnClickListener {
-            obtenerHora(notStart)
+            getTime(notStart)
         }
         ibEnd.setOnClickListener {
-            obtenerHora(notEnd)
+            getTime(notEnd)
         }
 
         btn_save.setOnClickListener {
@@ -153,24 +153,19 @@ class EditRouteFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(EditRouteViewModel::class.java)
     }
 
-    private fun obtenerHora(edt: EditText) {
-        val recogerHora = TimePickerDialog(
+    private fun getTime(edt: EditText) {
+        val pickHour = TimePickerDialog(
             requireContext(),
-            OnTimeSetListener { view, hourOfDay, minute -> //Formateo el hora obtenido: antepone el 0 si son menores de 10
-                val horaFormateada =
-                    if (hourOfDay < 10) java.lang.String.valueOf(CERO + hourOfDay) else hourOfDay.toString()
-                //Formateo el minuto obtenido: antepone el 0 si son menores de 10
-                val minutoFormateado =
-                    if (minute < 10) java.lang.String.valueOf(CERO + minute) else minute.toString()
+            { view, hourOfDay, minute ->
+                val hourFormatter = if (hourOfDay < 10) java.lang.String.valueOf(CERO + hourOfDay) else hourOfDay.toString()
+                val minuteFormatter = if (minute < 10) java.lang.String.valueOf(CERO + minute) else minute.toString()
 
                 //Muestro la hora con el formato deseado
-                edt.setText(horaFormateada + DOS_PUNTOS.toString() + minutoFormateado)
-            }, //Estos valores deben ir en ese orden
-            //Al colocar en false se muestra en formato 12 horas y true en formato 24 horas
-            //Pero el sistema devuelve la hora en formato 24 horas
-            hora, minuto, true
+                edt.setText("$hourFormatter$DOS_PUNTOS$minuteFormatter")
+            },
+            hour, minute, true
         )
-        recogerHora.show()
+        pickHour.show()
     }
 
 }

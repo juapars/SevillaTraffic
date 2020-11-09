@@ -31,14 +31,6 @@ class Route : Serializable {
 
     constructor()
 
-    override fun equals(other: Any?): Boolean {
-        return super.equals(other)
-    }
-
-    override fun hashCode(): Int {
-        return super.hashCode()
-    }
-
     override fun toString(): String {
         return "$name con origen $origin y destino $dest"
     }

@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Geocoder
 import android.os.Bundle
-import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -34,8 +33,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.maps.android.PolyUtil
 import com.google.maps.android.PolyUtil.isLocationOnEdge
 import com.google.maps.android.PolyUtil.isLocationOnPath
-import com.google.maps.android.data.kml.KmlLayer
-import org.jsoup.Jsoup
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -68,7 +65,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             ViewModelProviders.of(this).get(MapsViewModel::class.java)
         val root = inflater.inflate(R.layout.maps_fragment, container, false)
 
-  //      txt = root.findViewById(R.id.text_map)
 
         db = DBHelper(requireContext())
 
@@ -103,11 +99,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
             alertDialog2.setNegativeButton(
                 "No"
-            ) { dialog, which -> // Write your code here to execute after dialog
-                /*Toast.makeText(
-                    requireContext(),"You clicked on NO", Toast.LENGTH_SHORT)
-                    .show()
-                dialog.cancel()*/
+            ) { dialog, which ->
                 findNavController().navigate(R.id.nav_newRoute)
             }
 
@@ -122,7 +114,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
 
         val MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: Int = 0
-        // Here, thisActivity is the current activity
+
         if (ContextCompat.checkSelfPermission(
                 this.requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -130,8 +122,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             != PackageManager.PERMISSION_GRANTED
         ) {
 
-            // Permission is not granted
-            // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(
                     this.requireActivity(),
                     Manifest.permission.ACCESS_FINE_LOCATION

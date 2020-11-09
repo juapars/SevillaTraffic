@@ -1,6 +1,5 @@
 package com.example.sevillatraffic.adapter
 
-import android.R.attr.data
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
@@ -8,6 +7,7 @@ import android.speech.tts.TextToSpeech
 import android.speech.tts.TextToSpeech.OnInitListener
 import android.speech.tts.TextToSpeech.OnUtteranceCompletedListener
 import android.util.Log
+import org.w3c.dom.Text
 
 
 open class VoiceService : Service(), OnInitListener, OnUtteranceCompletedListener {
@@ -16,7 +16,6 @@ open class VoiceService : Service(), OnInitListener, OnUtteranceCompletedListene
 
     override fun onCreate() {
         mTts = TextToSpeech(this, this)
-        // This is a good place to set spokenText
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {

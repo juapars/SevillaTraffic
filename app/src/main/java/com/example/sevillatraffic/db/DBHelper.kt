@@ -4,10 +4,8 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
 import com.example.sevillatraffic.model.Route
 import com.example.sevillatraffic.model.Traffic
-import kotlinx.android.synthetic.main.edit_route_fragment.*
 import kotlin.collections.ArrayList
 
 class DBHelper(context: Context): SQLiteOpenHelper(context,
@@ -16,7 +14,7 @@ class DBHelper(context: Context): SQLiteOpenHelper(context,
 ){
 
     companion object{
-        private val DATABASE_VER = 3
+        private val DATABASE_VER = 4
         private val DATABASE_NAME = "sevtrafdb.db"
 
         // Tabla RUTA
@@ -50,14 +48,14 @@ class DBHelper(context: Context): SQLiteOpenHelper(context,
                 " $COL_INTENSITY TEXT, $COL_SOURCE TEXT)")
 
         db!!.execSQL(CREATE_TABLE_QUERY)
-        db!!.execSQL(CREATE_TABLE_T_QUERY)
+        db.execSQL(CREATE_TABLE_T_QUERY)
 
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         db!!.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
-        db!!.execSQL("DROP TABLE IF EXISTS $TABLE_NAME_T")
-        onCreate(db!!)
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME_T")
+        onCreate(db)
     }
 
 
