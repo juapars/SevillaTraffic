@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.example.sevillatraffic.model.Route
 import com.example.sevillatraffic.model.Traffic
-import kotlin.collections.ArrayList
 
 class DBHelper(context: Context): SQLiteOpenHelper(context,
     DATABASE_NAME, null,
@@ -14,7 +13,7 @@ class DBHelper(context: Context): SQLiteOpenHelper(context,
 ){
 
     companion object{
-        private val DATABASE_VER = 4
+        private val DATABASE_VER = 5
         private val DATABASE_NAME = "sevtrafdb.db"
 
         // Tabla RUTA
@@ -27,7 +26,7 @@ class DBHelper(context: Context): SQLiteOpenHelper(context,
         private val COL_NOTSTART = "NotStart"
         private val COL_NOTEND = "NotEnd"
         private val COL_PLACEMARKS = "Placemarks"
-        private val COL_ENABLED = "True"
+        private val COL_ENABLED = "Enabled"
 
 
         // Tabla ALERTAS
@@ -65,6 +64,35 @@ class DBHelper(context: Context): SQLiteOpenHelper(context,
         get(){
             val lstRoutes = ArrayList<Route>()
             val selectQuery = "SELECT * FROM $TABLE_NAME"
+            val db = this.writableDatabase
+            val cursor = db.rawQuery(selectQuery,null)
+
+            if(cursor.moveToFirst()){
+                do{
+                    val route = Route()
+
+                    route.id = cursor.getInt(cursor.getColumnIndex(COL_ID_R))
+                    route.name = cursor.getString(cursor.getColumnIndex(COL_NAME))
+                    route.date = cursor.getString(cursor.getColumnIndex(COL_DATE))
+                    route.origin = cursor.getString(cursor.getColumnIndex(COL_ORIGIN))
+                    route.dest = cursor.getString(cursor.getColumnIndex(COL_DEST))
+                    route.notStart = cursor.getString(cursor.getColumnIndex(COL_NOTSTART))
+                    route.notEnd = cursor.getString(cursor.getColumnIndex(COL_NOTEND))
+                    route.placemarks = cursor.getString(cursor.getColumnIndex(COL_PLACEMARKS))
+                    route.enabled = cursor.getString(cursor.getColumnIndex(COL_ENABLED))
+
+                    lstRoutes.add(route)
+                }while(cursor.moveToNext())
+            }
+            db.close()
+
+            return lstRoutes
+        }
+
+    val enabledRoute : List<Route>
+        get(){
+            val lstRoutes = ArrayList<Route>()
+            val selectQuery = "SELECT * FROM $TABLE_NAME WHERE ENABLED LIKE 'True' OR 'true'"
             val db = this.writableDatabase
             val cursor = db.rawQuery(selectQuery,null)
 

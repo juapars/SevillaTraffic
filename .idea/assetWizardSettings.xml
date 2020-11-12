@@ -307,7 +307,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material/icons/materialicons/info/baseline_info_24.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material/icons/materialicons/skip_next/baseline_skip_next_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -318,7 +318,7 @@
                         <option name="values">
                           <map>
                             <entry key="color" value="e2c600" />
-                            <entry key="outputName" value="ic_baseline_info_24" />
+                            <entry key="outputName" value="ic_baseline_skip_next_24" />
                             <entry key="sourceFile" value="C:\Users\John\Desktop\TFG\SevillaTraffic" />
                           </map>
                         </option>

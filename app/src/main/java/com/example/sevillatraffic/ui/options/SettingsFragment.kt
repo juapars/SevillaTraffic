@@ -1,7 +1,6 @@
 package com.example.sevillatraffic.ui.options
 
 import android.os.Bundle
-import android.util.Log
 import androidx.navigation.fragment.findNavController
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -46,6 +45,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         voice = findPreference<SwitchPreferenceCompat>("voice") as SwitchPreferenceCompat
         voiceCar = findPreference<SwitchPreferenceCompat>("voiceCar") as SwitchPreferenceCompat
+
 
         voice.setOnPreferenceClickListener{
             toggleButtons()

@@ -33,7 +33,10 @@ class ListTrafficAdapter(private val myDataset: List<Traffic>) : RecyclerView.Ad
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+
+
         var direc = myDataset[position].direction?.replace(">","➤")
+
         holder.textView.txt_direction.text = direc
         holder.textView.txt_intensity.text = myDataset[position].intensity
 
@@ -68,6 +71,8 @@ class ListTrafficAdapter(private val myDataset: List<Traffic>) : RecyclerView.Ad
                 alertDialog.show()
             }
 
+        }else{
+            holder.textView.btn_traffic.visibility = View.GONE
         }
     }
 

@@ -98,6 +98,7 @@ class NotificationsFragment : AppCompatDialogFragment() {
 
         db = DBHelper(requireContext())
 
+
         if(db.allTraffic.isEmpty())  DownloadXmlTask(true, db, requireContext()).execute(fileUrl)
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
@@ -136,6 +137,7 @@ class NotificationsFragment : AppCompatDialogFragment() {
           } //db.allTraffic
 
         lstRoute = db.allRoute
+
         var list: List<Traffic> = arrayListOf()
         for(r in lstRoute){
 
@@ -148,8 +150,6 @@ class NotificationsFragment : AppCompatDialogFragment() {
                 var endSchedule = Calendar.getInstance()
                 endSchedule.set(Calendar.HOUR_OF_DAY, schedule2?.get(0)?.toInt()!!)
                 endSchedule.set(Calendar.MINUTE, schedule2[1].toInt())
-
-            Log.e("NOTIFICACIONES EXTRA 2", "FUNCIONA EL METODO $bluetooth")
 
 
             if(r.placemarks != "null" && r.placemarks != "" && startSchedule < endSchedule && Calendar.getInstance() < endSchedule
@@ -190,6 +190,17 @@ class NotificationsFragment : AppCompatDialogFragment() {
                 alarmMgr?.cancel(alarmIntent)
             }
         }
+
+          val emptyTraffic: Traffic
+          val enabledRoutes = db.enabledRoute
+
+          if(lstRoute.isEmpty() || enabledRoutes.isEmpty()){
+              emptyTraffic = Traffic(0,"","No existen rutas activas","Crea una nueva ruta desde el menú o activa alguna existente","")
+              list = list + emptyTraffic
+          } else if(list.isEmpty()){
+              emptyTraffic = Traffic(0,"","Tráfico fluido","No existen alertas de tráfico o es fluido","")
+              list = list + emptyTraffic
+          }
 
           viewManager = LinearLayoutManager(requireContext())
           viewAdapter = ListTrafficAdapter(list)
