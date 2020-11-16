@@ -7,7 +7,10 @@ import androidx.viewpager.widget.ViewPager
 import com.example.sevillatraffic.MainActivity
 import com.example.sevillatraffic.R
 
-
+/*
+    Clase que contiene la actividad con el tutorial para la aplicación, el cual solo se ejecuta
+    cuando el usuario instala la aplicación
+ */
 class IntroActivity : AppCompatActivity() {
     lateinit var viewPager: ViewPager
     lateinit var adapter: SlideViewPagerAdapter

@@ -6,9 +6,10 @@ import android.os.IBinder
 import android.speech.tts.TextToSpeech
 import android.speech.tts.TextToSpeech.OnInitListener
 import android.speech.tts.TextToSpeech.OnUtteranceCompletedListener
-import android.util.Log
-import org.w3c.dom.Text
 
+/*
+    Clase servicio para la ejecución de lectura de las notificaciones por voz
+ */
 
 open class VoiceService : Service(), OnInitListener, OnUtteranceCompletedListener {
     private var mTts: TextToSpeech? = null

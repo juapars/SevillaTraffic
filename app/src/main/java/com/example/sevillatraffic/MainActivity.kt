@@ -1,6 +1,7 @@
 package com.example.sevillatraffic
 
-import android.app.*
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
@@ -20,6 +21,10 @@ import com.example.sevillatraffic.adapter.DownloadXmlTask
 import com.example.sevillatraffic.db.DBHelper
 import com.google.android.material.navigation.NavigationView
 
+/*
+    Actividad principal de la aplicación, consistente en el menú lateral
+
+ */
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,24 +37,24 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_main)                  // Se establece la relación con la vista
 
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-        db = DBHelper(this)
+        db = DBHelper(this)                             // Se inicia la base de datos
 
+
+//      Se comprueba si en la base de datos existen los datos del tráfico. De no ser así, se procede
+//        a descargar el archivo y establecerlos en la base de datos
         if(db.allTraffic.isEmpty())  DownloadXmlTask(true,db, this).execute("http://trafico.sevilla.org/estado-trafico-CGM.kml")
-/*
-        val fab: FloatingActionButton = findViewById(R.id.fab)
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }*/
+
+
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
 
+// Se configuran las secciones del menú lateral, es decir, los enlaces a las vistas
 
         appBarConfiguration = AppBarConfiguration(
             setOf(
@@ -66,6 +71,9 @@ class MainActivity : AppCompatActivity() {
         checkPermission()
     }
 
+
+    // Método para la creación del canal de notificaciones, para poder publicar las alertas del
+    // tráfico que se generen
 
     private fun createNotificationChannel() {
 
@@ -93,6 +101,9 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
+
+    // Método para controlar el menú de opciones en la barra de estado
+    
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle item selection
         val navController = findNavController(R.id.nav_host_fragment)

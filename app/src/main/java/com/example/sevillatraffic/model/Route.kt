@@ -1,8 +1,10 @@
 package com.example.sevillatraffic.model
 
-import com.google.android.gms.maps.model.PolylineOptions
 import java.io.Serializable
-import java.util.*
+
+/*
+    Clase con el modelo para la base de datos de las rutas
+ */
 
 class Route : Serializable {
 

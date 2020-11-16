@@ -5,10 +5,8 @@ import android.os.AsyncTask
 import android.util.Log
 import com.example.sevillatraffic.db.DBHelper
 import com.example.sevillatraffic.model.Traffic
-import com.example.sevillatraffic.ui.notifications.NotificationsFragment
 import org.jsoup.Jsoup
 import org.jsoup.parser.Parser
-import org.xmlpull.v1.XmlPullParserException
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
@@ -16,6 +14,9 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
 
+/*
+    Clase para la descarga del archivo mediante enlace
+ */
 class DownloadXmlTask(var first:Boolean, var db: DBHelper, var context: Context) : AsyncTask<String?, Void?, Int>() {
 
     override fun doInBackground(vararg params: String?): Int? {
@@ -36,11 +37,6 @@ class DownloadXmlTask(var first:Boolean, var db: DBHelper, var context: Context)
             // Error de conexión
             Log.e("DESCARGA ARCHIVO E1",e.message)
             1
-        } catch (e: XmlPullParserException) {
-            e.printStackTrace()
-            // Error en los datos
-            Log.e("DESCARGA ARCHIVO E2",e.message)
-            2
         }
     }
 
@@ -117,14 +113,11 @@ class DownloadXmlTask(var first:Boolean, var db: DBHelper, var context: Context)
                     var n = Jsoup.parse(c.text())
                     if (n.select("th")
                             .count() > 5
-                    ) {   // && n.select("th")[5].text() == "DETECTORES"
+                    ) {
                         t_source = n.select("th")[5].text()
 
                         if (n.select("td").count() >2) {
-                            //Log.e("TRAFFIC","PLACMARK ID ${p.id().split("_")[1]}")
                             t_id = p.id().split("_")[1]
-                            //Log.e("TRAFFIC SENTIDO ", " ${n.select("td")[1].text()}")
-                            //t_direction = n.select("td")[1].text()
 
                             var a = 0
                             for (r in n.select("td")) {

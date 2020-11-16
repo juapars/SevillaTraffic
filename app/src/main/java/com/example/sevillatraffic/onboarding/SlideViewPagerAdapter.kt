@@ -12,6 +12,9 @@ import androidx.viewpager.widget.ViewPager
 import com.example.sevillatraffic.MainActivity
 import com.example.sevillatraffic.R
 
+/*
+    Adaptador para la creación del tutorial con vistas deslizantes usando PagerAdapter
+ */
 
 class SlideViewPagerAdapter(var ctx: Context, var viewPager: ViewPager) : PagerAdapter() {
     override fun getCount(): Int {

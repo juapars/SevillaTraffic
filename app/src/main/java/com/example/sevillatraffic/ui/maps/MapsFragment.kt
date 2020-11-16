@@ -31,7 +31,6 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.maps.android.PolyUtil
-import com.google.maps.android.PolyUtil.isLocationOnEdge
 import com.google.maps.android.PolyUtil.isLocationOnPath
 import retrofit2.Call
 import retrofit2.Callback
@@ -164,7 +163,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
                             for(traffic in lstTraffic){
                                 val latlong = traffic.location?.split(",")
-                                Log.e("AWA"," POR QUE FALLA AHORA $latlong Y ESTO QUE  ")
+
                                 var loc = LatLng(latlong?.get(1)?.toDouble()!!, latlong.get(0).toDouble())
 
                                 if(isLocationOnPath(loc, polyl, false, 20.0)){
@@ -194,11 +193,21 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             for (a in locatlist!!) {
                 pl.add(a)
             }
-            val coc: Boolean = isLocationOnEdge(locatlist!![0], locatlist!!, true)
-            var mOrigin = MarkerOptions().position(locatlist!![0])
+
             mMap.addMarker(MarkerOptions().position(locatlist!![0]))
             mMap.addMarker(MarkerOptions().position(locatlist!![locatlist!!.size - 1]))
             mMap.addPolyline(pl.width(10f).color(Color.RED))
+
+            for(traffic in lstTraffic){
+                val lat = traffic.location?.split(",")
+
+                var loc = LatLng(lat?.get(1)?.toDouble()!!, lat.get(0).toDouble())
+
+                if(isLocationOnPath(loc, locatlist, false, 20.0)){
+                    if(lstPlacemarks.isEmpty()) lstPlacemarks += traffic.id
+                    else lstPlacemarks += "," + traffic.id
+                }
+            }
         }
 
     }

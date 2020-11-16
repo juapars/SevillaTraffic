@@ -2,6 +2,10 @@ package com.example.sevillatraffic.model
 
 import java.io.Serializable
 
+/*
+    Clase con el modelo para la base de datos del tráfico
+ */
+
 class Traffic : Serializable {
 
     var id : Int = 0

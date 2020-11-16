@@ -7,6 +7,12 @@ import android.database.sqlite.SQLiteOpenHelper
 import com.example.sevillatraffic.model.Route
 import com.example.sevillatraffic.model.Traffic
 
+
+/*
+    Clase donde se define y se crean los modelos de la base de datos, así como sus métodos
+    CRUD y consultas
+ */
+
 class DBHelper(context: Context): SQLiteOpenHelper(context,
     DATABASE_NAME, null,
     DATABASE_VER

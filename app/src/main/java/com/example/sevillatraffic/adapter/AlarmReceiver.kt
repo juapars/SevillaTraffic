@@ -3,7 +3,6 @@ package com.example.sevillatraffic.adapter
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothProfile
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -19,6 +18,13 @@ import com.example.sevillatraffic.model.Route
 import com.example.sevillatraffic.model.Traffic
 import java.util.*
 
+/*
+    Clase en la que se encuentra el controlador de las alarmas.
+    Cuando estas se activan, se llamará a esta clase de forma recurrente hasta que se decida parar.
+
+    En esta clase se actualizan los datos del tráfico con la descarga del archivo, se crean y
+    publican las notificaciones en el canal, y se gestiona la lectura de estas por voz.
+ */
 
 class AlarmReceiver : BroadcastReceiver() {
 
@@ -35,7 +41,9 @@ class AlarmReceiver : BroadcastReceiver() {
     private var voiceCar= false
     private var bluetooth = false
 
-
+/*
+    Método para comprobar si existe un dispositivo bluetooth conectado para utilizarlo como canal de voz
+ */
     private fun checkConnected(context: Context) {
         BluetoothAdapter.getDefaultAdapter().getProfileProxy(context, serviceListener, BluetoothProfile.HEADSET)
 
@@ -43,6 +51,10 @@ class AlarmReceiver : BroadcastReceiver() {
 
         bluetooth = n ==2
     }
+
+    /*
+    Variable para la detección de dispositivo bluetooth
+     */
     private var serviceListener: BluetoothProfile.ServiceListener = object :
         BluetoothProfile.ServiceListener {
         override fun onServiceDisconnected(profile: Int) {}
@@ -60,6 +72,7 @@ class AlarmReceiver : BroadcastReceiver() {
     }
 
 
+    // Método principal
     override fun onReceive(context: Context?, intent: Intent?) {
         val pm = context!!.getSystemService(Context.POWER_SERVICE) as PowerManager
         val wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "myapp:magico")
@@ -87,6 +100,8 @@ class AlarmReceiver : BroadcastReceiver() {
         alarmManager.cancel(sender)
     }
 
+
+    // Método para lanzar las notificaciones y actualizar el estado del tráfico
     private fun refreshData(context: Context) {
 
         lstTraffic =  db.intenseTrafficOperator

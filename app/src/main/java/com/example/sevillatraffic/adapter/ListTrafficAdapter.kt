@@ -11,7 +11,10 @@ import com.example.sevillatraffic.R
 import com.example.sevillatraffic.model.Traffic
 import kotlinx.android.synthetic.main.row_traffic_layout.view.*
 
-
+/*
+    Adaptador para la vista con la lista de las notificaciones de tráfico de las rutas
+     del usuario usando RecyclerView
+ */
 class ListTrafficAdapter(private val myDataset: List<Traffic>) : RecyclerView.Adapter<ListTrafficAdapter.MyViewHolder>() {
 
     lateinit var context : Context

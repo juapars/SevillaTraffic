@@ -17,6 +17,9 @@ import com.example.sevillatraffic.db.DBHelper
 import com.example.sevillatraffic.model.Route
 import kotlinx.android.synthetic.main.row_layout.view.*
 
+/*
+    Adaptador para la vista con la lista de las rutas del usuario usando RecyclerView
+ */
 
 class ListRouteAdapter(val activity: Activity, private var myDataset: List<Route>, private var navController: NavController) : RecyclerView.Adapter<ListRouteAdapter.MyViewHolder>() {
 
@@ -33,7 +36,7 @@ class ListRouteAdapter(val activity: Activity, private var myDataset: List<Route
         context = parent.context
         val rawView = LayoutInflater.from(parent.context)
             .inflate(R.layout.row_layout, parent, false)
-        rawView.layoutParams = RecyclerView.LayoutParams(1000, 450)
+        rawView.layoutParams = RecyclerView.LayoutParams(1000, 500)
         rawView.setPadding(20, 20, 0, 20)
 
         db = DBHelper(activity)

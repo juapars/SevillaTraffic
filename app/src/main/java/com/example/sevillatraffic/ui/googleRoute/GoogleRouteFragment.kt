@@ -81,14 +81,14 @@ class GoogleRouteFragment : Fragment() {
                 TextUtils.isEmpty(txtOrigin.text) -> {
                     Toast.makeText(
                         requireContext(),
-                        "Ponle un nombre a tu ruta antes de guardar",
+                        "Introduce una dirección de origen",
                         Toast.LENGTH_LONG
                     ).show()
                 }
                 TextUtils.isEmpty(txtDestination.text) -> {
                     Toast.makeText(
                         requireContext(),
-                        "Añade una fecha de inicio",
+                        "Introduce una dirección destino",
                         Toast.LENGTH_LONG
                     ).show()
                 }
