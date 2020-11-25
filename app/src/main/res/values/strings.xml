@@ -26,14 +26,14 @@
     <string name="txt_opt_voiceCar_sumOn">Siempre se leerán por voz las notificaciones</string>
     <string name="txt_opt_voiceCar_sumOff">Solo se leerán por voz al estar conectadas a un dispositivo</string>
 
+    <string name="app_version">v1.0.0</string>
     <string name="app_info_description">
-        v1.0.0\nSevillaTraffic es una aplicación para la notificación del tráfico en Sevilla con rutas personalizadas.\n
-                Esta aplicación ha sido desarrollada por Juan Parra con el fin de aportar una herramienta útil para el conductor. \n
-                Correo de contacto: juaparser@gmail.com.
+        La aplicación ha sido desarrollada por Juan Parra en el marco de un Trabajo Fin de Grado de la E.T.S. de Ingeniería Informática,
+        dirigido por el profesor Raouf Senhadji y con la colaboración de Francisco León (Centro de Gestión de la Movilidad de Sevilla).
     </string>
 
     <string name="menu_notifications">Alertas</string>
-    <string name="menu_googleRoute">Ruta con google</string>
+    <string name="menu_googleRoute">Ruta automática</string>
     <string name="menu_manualRoute">Ruta manual</string>
     <string name="menu_maps">Ruta actual</string>
     <string name="menu_newRoute">Nueva ruta</string>
@@ -43,7 +43,7 @@
 
     <string name="home_button">Mostrar mapa</string>
     <string name="button_manual">Manualmente</string>
-    <string name="button_google">Con google maps</string>
+    <string name="button_google">Automáticamente</string>
     <string name="btn_search">Buscar ruta</string>
     <string name="title_activity_maps">Ruta actual</string>
 

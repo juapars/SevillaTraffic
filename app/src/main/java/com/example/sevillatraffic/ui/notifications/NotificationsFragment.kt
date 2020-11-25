@@ -61,11 +61,15 @@ class NotificationsFragment : AppCompatDialogFragment() {
     private lateinit var threadName: String
 
     private fun checkConnected() {
-        BluetoothAdapter.getDefaultAdapter().getProfileProxy(requireContext(), serviceListener, BluetoothProfile.HEADSET)
+        if(BluetoothAdapter.getDefaultAdapter() != null) {
+            BluetoothAdapter.getDefaultAdapter()
+                .getProfileProxy(requireContext(), serviceListener, BluetoothProfile.HEADSET)
 
-        var n = BluetoothAdapter.getDefaultAdapter().getProfileConnectionState(BluetoothProfile.HEADSET)
+            var n = BluetoothAdapter.getDefaultAdapter()
+                .getProfileConnectionState(BluetoothProfile.HEADSET)
 
-        bluetooth = n ==2
+            bluetooth = n == 2
+        }
     }
     private var serviceListener: ServiceListener = object : ServiceListener {
         override fun onServiceDisconnected(profile: Int) {}

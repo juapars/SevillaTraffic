@@ -19,16 +19,17 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/txt_origin"
-        android:layout_width="299dp"
-        android:layout_height="37dp"
-        android:gravity="center_vertical"
-        android:text="Origen"
+        android:id="@+id/txt_notifications"
+        android:layout_width="165dp"
+        android:layout_height="26dp"
+        android:text="De 09:00 a 10:00"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.141"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_date" />
+        app:layout_constraintHorizontal_bias="0.023"
+        app:layout_constraintStart_toEndOf="@+id/imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/txt_dest"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/txt_date"
@@ -38,32 +39,33 @@
         android:text="Eddy"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.058"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.021"
+        app:layout_constraintStart_toEndOf="@id/imageView2"
         app:layout_constraintTop_toBottomOf="@+id/txt_name" />
 
     <TextView
-        android:id="@+id/txt_notifications"
-        android:layout_width="162dp"
-        android:layout_height="20dp"
-        android:text="De 09:00 a 10:00"
+        android:id="@+id/txt_origin"
+        android:layout_width="299dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="16dp"
+        android:gravity="center_vertical"
+        android:text="Origen"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.064"
+        app:layout_constraintHorizontal_bias="0.218"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_dest"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_date" />
 
     <TextView
         android:id="@+id/txt_dest"
         android:layout_width="297dp"
         android:layout_height="37dp"
+        android:layout_marginStart="16dp"
         android:gravity="center_vertical"
         android:text="Destino"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.14"
+        app:layout_constraintHorizontal_bias="0.214"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_origin" />
 
@@ -72,7 +74,7 @@
         style="@style/Widget.AppCompat.Button"
         android:layout_width="43dp"
         android:layout_height="41dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/ic_baseline_delete_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.956"
@@ -83,20 +85,42 @@
         android:id="@+id/btn_edit"
         android:layout_width="43dp"
         android:layout_height="41dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/ic_baseline_edit_24"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.956"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.914"
+        app:layout_constraintStart_toEndOf="@id/txt_date"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Switch
         android:id="@+id/btn_enable"
         android:layout_width="43dp"
         android:layout_height="28dp"
-        android:layout_marginTop="104dp"
+        android:layout_marginTop="128dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="79dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3"
+        app:srcCompat="@drawable/ic_baseline_notifications_24" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toStartOf="@+id/txt_date"
+        app:layout_constraintHorizontal_bias="0.761"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_baseline_access_time_24" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

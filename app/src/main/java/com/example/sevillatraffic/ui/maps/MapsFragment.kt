@@ -153,6 +153,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
 
             if (origin != null && dest != null) {
+                if(!origin.contains("Sevilla")) origin += ", Sevilla"
+                if(!dest.contains("Sevilla")) dest += ", Sevilla"
                 apiServices.getDirection(origin, dest, getString(R.string.api_key))
                     .enqueue(object : Callback<DirectionResponses> {
                         override fun onResponse(

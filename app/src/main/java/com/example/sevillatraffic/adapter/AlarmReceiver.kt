@@ -150,7 +150,7 @@ class AlarmReceiver : BroadcastReceiver() {
             if (notModerate.isNotEmpty()) notDesc += "\n MODERADO: $notModerate."
 
 
-                notDesc.replace(">", " ")
+            notDesc = notDesc.replace(">", " ")
 
             if(notDesc.isNotEmpty()) {
                 var builder = NotificationCompat.Builder(context, "1600")

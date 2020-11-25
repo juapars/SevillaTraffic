@@ -159,14 +159,10 @@ class GoogleRouteFragment : Fragment() {
     }
 
     private fun getConnectivityStatusString(context: Context): Int? {
-        Log.e("GOOGLE CONNECTIVITY","ENTRAMOS EN METODO")
         var status = 0
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
-        Log.e("GOOGLE CONNECTIVITY","VALOR ACTIVE NETWORK $activeNetwork")
         if (activeNetwork != null) {
-            Log.e("GOOGLE CONNECTIVITY","VALOR ACTIVE TIPO ${activeNetwork.type} CUANDO WIFI ES ${ConnectivityManager.TYPE_WIFI} Y " +
-                    " ${ConnectivityManager.TYPE_MOBILE}")
             if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
                 status = 1
             } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
