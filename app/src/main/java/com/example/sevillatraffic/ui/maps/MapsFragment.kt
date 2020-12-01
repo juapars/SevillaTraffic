@@ -4,27 +4,34 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.example.sevillatraffic.R
+import com.example.sevillatraffic.db.DBHelper
 import com.example.sevillatraffic.mapas.model.DirectionResponses
-import com.google.android.gms.location.FusedLocationProviderClient
+import com.example.sevillatraffic.model.Traffic
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.maps.android.PolyUtil
+import com.google.maps.android.PolyUtil.isLocationOnPath
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,19 +39,22 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
+import java.util.*
 
 class MapsFragment : Fragment(), OnMapReadyCallback {
 
 
     private lateinit var mapsViewModel: MapsViewModel
     private lateinit var mMap: GoogleMap
-    private var requestingLocationUpdates: Boolean = true
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var mOrigin: LatLng
-    private lateinit var mDestination: LatLng
+    private var locatlist: ArrayList<LatLng>? = null
+    private lateinit var origin : String
+    private lateinit var dest : String
+    internal lateinit var db: DBHelper
+    private var polyl: List<LatLng> = listOf()
+    private lateinit var lstTraffic: List<Traffic>
+    private var lstPlacemarks: String = ""
 
- //   private lateinit var txt: TextView
-
+    private lateinit var btnConfirm: FloatingActionButton
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,19 +64,13 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             ViewModelProviders.of(this).get(MapsViewModel::class.java)
         val root = inflater.inflate(R.layout.maps_fragment, container, false)
 
-  //      txt = root.findViewById(R.id.text_map)
 
-        mOrigin = LatLng(37.389280, -5.970090) //--------------------------------------------------------------------------------
-        mDestination = LatLng(37.38259, -6.008911)//--------------------------------------------------------------------------------
+        db = DBHelper(requireContext())
 
+        lstTraffic = db.allTraffic
         mapsViewModel.text.observe(viewLifecycleOwner, Observer {
         })
 
-/*
-        val mapFragment = requireActivity().supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
-*/
         val manager = requireActivity().supportFragmentManager
         val transaction = manager.beginTransaction()
         val fragment = SupportMapFragment()
@@ -75,14 +79,41 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
 
         fragment.getMapAsync(this)
 
+        btnConfirm = root.findViewById(R.id.btn_confirm)
+
+        btnConfirm.setOnClickListener {
+            val alertDialog2: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+
+            alertDialog2.setTitle("Confirmar ruta")
+            alertDialog2.setMessage("¿Es esta la ruta que quiere guardar?")
+
+            alertDialog2.setPositiveButton("Si") { dialog, which ->
+                val datosAEnviar = Bundle()
+                datosAEnviar.putSerializable("origin", origin)
+                datosAEnviar.putSerializable("dest", dest)
+                datosAEnviar.putString("placemarks", lstPlacemarks.toString())
+                datosAEnviar.putBoolean("edit", false)
+                findNavController().navigate(R.id.nav_edit_route, datosAEnviar)
+            }
+
+            alertDialog2.setNegativeButton(
+                "No"
+            ) { dialog, which ->
+                findNavController().navigate(R.id.nav_newRoute)
+            }
+
+            alertDialog2.show()
+        }
+
         return root
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
+
         val MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: Int = 0
-        // Here, thisActivity is the current activity
+
         if (ContextCompat.checkSelfPermission(
                 this.requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -90,27 +121,19 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             != PackageManager.PERMISSION_GRANTED
         ) {
 
-            // Permission is not granted
-            // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(
                     this.requireActivity(),
                     Manifest.permission.ACCESS_FINE_LOCATION
                 )
             ) {
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
+
             } else {
-                // No explanation needed, we can request the permission.
                 ActivityCompat.requestPermissions(
                     this.requireActivity(),
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                     MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
                 )
 
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
             }
         } else {
             // Permission has already been granted
@@ -119,81 +142,113 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         mMap.isMyLocationEnabled = true
         mMap.uiSettings.isMapToolbarEnabled = true
         mMap.uiSettings.isZoomControlsEnabled = true
-        //   mMap.setOnMyLocationButtonClickListener(this)
-        //  mMap.setOnMyLocationClickListener(this);
 
-        // Add a marker in Seville and move the camera
-        val seville = LatLng(37.38, -5.98)
-        var allPoints = mutableListOf<LatLng>()
+        if(arguments?.getSerializable("listLoc") !=null) {
+            locatlist = arguments?.getSerializable("listLoc") as ArrayList<LatLng>
+        }
+        if (locatlist.isNullOrEmpty()){
+            val apiServices = RetrofitClient.apiServices(this.requireContext())
+            origin = requireArguments().getString("txtOrigin").toString()
+            dest = requireArguments().getString("txtDestination").toString()
 
-        mMap.addMarker(MarkerOptions().position(seville).title("Marker in Seville"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(seville))
-        mMap.setOnMapClickListener {
-            allPoints.add(it)
-            mMap.clear()
-            mMap.addMarker(MarkerOptions().position(it))
+
+            if (origin != null && dest != null) {
+                if(!origin.contains("Sevilla")) origin += ", Sevilla"
+                if(!dest.contains("Sevilla")) dest += ", Sevilla"
+                apiServices.getDirection(origin, dest, getString(R.string.api_key))
+                    .enqueue(object : Callback<DirectionResponses> {
+                        override fun onResponse(
+                            call: Call<DirectionResponses>,
+                            response: Response<DirectionResponses>
+                        ) {
+                            drawPolyline(response)
+
+                            for(traffic in lstTraffic){
+                                val latlong = traffic.location?.split(",")
+
+                                var loc = LatLng(latlong?.get(1)?.toDouble()!!, latlong.get(0).toDouble())
+
+                                if(isLocationOnPath(loc, polyl, false, 20.0)){
+                                    if(lstPlacemarks.isEmpty()) lstPlacemarks += traffic.id
+                                    else lstPlacemarks += "," + traffic.id
+                                }
+                            }
+
+                        }
+
+                        override fun onFailure(call: Call<DirectionResponses>, t: Throwable) {
+                            Log.e("Error", t.localizedMessage)
+                        }
+                    })
+            }
+
+            mMap.addMarker(MarkerOptions().position(getCoordinates(origin)))
+            mMap.addMarker(MarkerOptions().position(getCoordinates(dest)))
+
+        }else{
+            origin = getAddress(locatlist!![0])
+            dest = getAddress(locatlist!![locatlist!!.size - 1])
+
+            var camPos = CameraPosition.builder().target(locatlist!![locatlist!!.size - 1]).zoom(16f).build()
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(camPos))
+            var pl = PolylineOptions()
+            for (a in locatlist!!) {
+                pl.add(a)
+            }
+
+            mMap.addMarker(MarkerOptions().position(locatlist!![0]))
+            mMap.addMarker(MarkerOptions().position(locatlist!![locatlist!!.size - 1]))
+            mMap.addPolyline(pl.width(10f).color(Color.RED))
+
+            for(traffic in lstTraffic){
+                val lat = traffic.location?.split(",")
+
+                var loc = LatLng(lat?.get(1)?.toDouble()!!, lat.get(0).toDouble())
+
+                if(isLocationOnPath(loc, locatlist, false, 20.0)){
+                    if(lstPlacemarks.isEmpty()) lstPlacemarks += traffic.id
+                    else lstPlacemarks += "," + traffic.id
+                }
+            }
         }
 
-  //      txt.text = arguments.toString()
-/*
-        var locatlist: ArrayList<Pair<Double,Double>> = this.arguments?.get(0.toString()) as ArrayList<Pair<Double, Double>>
-
-        var pl = PolylineOptions()
-
-        for (a in locatlist){
-            pl.add(LatLng(a.first,a.second))
-        }
-
-        mMap.addPolyline(pl.width(10f).color(Color.RED))*/
-/*
-       mMap.addPolyline(
-           PolylineOptions()
-               .add(LatLng(37.389280, -5.970090))
-               .add(LatLng(37.387818, -5.968076))
-               .add(LatLng(37.387780, -5.967811))
-               .add(LatLng(37.387540, -5.967787))
-               .add(LatLng(37.387510, -5.959980))
-               .width(10f)
-               .color(Color.RED)
-
-       )*/
-
-        val fkip = LatLng(37.389280, -5.970090)
-        val monas = LatLng(37.380736, -6.005469)
-        val fromFKIP = fkip.latitude.toString() + "," + fkip.longitude.toString()
-        val toMonas = monas.latitude.toString() + "," + monas.longitude.toString()
-
-        val apiServices =
-            RetrofitClient.apiServices(
-                this.requireContext()
-            )
-        apiServices.getDirection(fromFKIP, toMonas, getString(R.string.api_key))
-            .enqueue(object : Callback<DirectionResponses> {
-                override fun onResponse(call: Call<DirectionResponses>, response: Response<DirectionResponses>) {
-                    drawPolyline(response)
-                    Log.d("bisa dong oke", response.message())
-                }
-
-                override fun onFailure(call: Call<DirectionResponses>, t: Throwable) {
-                    Log.e("anjir error", t.localizedMessage)
-                }
-            })
     }
 
-    private fun drawPolyline(response: Response<DirectionResponses>) {
+    private fun getAddress(coordinates: LatLng): String{
+        var geocoder = Geocoder(requireContext(), Locale.getDefault())
+
+        var res = geocoder.getFromLocation(coordinates.latitude, coordinates.longitude, 1)
+        return res[0].getAddressLine(0)
+    }
+    private fun getCoordinates(name: String): LatLng{
+        var geocoder = Geocoder(requireContext(), Locale.getDefault())
+
+        var res = geocoder.getFromLocationName(name, 1)
+        return LatLng(res[0].latitude, res[0].longitude)
+    }
+
+    private fun drawPolyline(response: Response<DirectionResponses>): PolylineOptions? {
         val shape = response.body()?.routes?.get(0)?.overviewPolyline?.points
         val polyline = PolylineOptions()
             .addAll(PolyUtil.decode(shape))
             .width(8f)
             .color(Color.RED)
         mMap.addPolyline(polyline)
+        polyl = PolyUtil.decode(shape)
+        var camPos = CameraPosition.builder().target(polyline.points[0]).zoom(14f).build()
+
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(camPos))
+
+        return polyline
     }
 
     private interface ApiServices {
         @GET("maps/api/directions/json")
-        fun getDirection(@Query("origin") origin: String,
-                         @Query("destination") destination: String,
-                         @Query("key") apiKey: String): Call<DirectionResponses>
+        fun getDirection(
+            @Query("origin") origin: String,
+            @Query("destination") destination: String,
+            @Query("key") apiKey: String
+        ): Call<DirectionResponses>
     }
 
     private object RetrofitClient {
@@ -204,9 +259,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                 .build()
 
             return retrofit.create<ApiServices>(
-                ApiServices::class.java)
+                ApiServices::class.java
+            )
         }
     }
-
-
 }

@@ -3,45 +3,48 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@+id/nav_notifications">
 
     <fragment
-        android:id="@+id/nav_home"
-        android:name="com.example.sevillatraffic.ui.home.HomeFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" >
+        android:id="@+id/nav_notifications"
+        android:name="com.example.sevillatraffic.ui.notifications.NotificationsFragment"
+        android:label="@string/menu_notifications"
+        tools:layout="@layout/fragment_notifications" >
         <action
-            android:id="@+id/action_nav_home_to_nav_gallery"
-            app:destination="@id/nav_gallery"
-            app:popUpTo="@id/nav_gallery"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim">
-            <action
-                android:id="@+id/button22"
-                app:destination="@id/nav_slideshow" />
-        </action>
+            android:id="@+id/action_nav_notifications_to_nav_newRoute"
+            app:destination="@id/nav_newRoute"
+            app:popUpTo="@id/nav_notifications" />
         <action
-            android:id="@+id/action_nav_home_to_nav_slideshow"
-            app:destination="@id/nav_slideshow" />
+            android:id="@+id/action_nav_notifications_to_nav_my_routes"
+            app:destination="@id/nav_my_routes"
+            app:popUpTo="@id/nav_notifications" />
         <action
-            android:id="@+id/action_nav_home_to_nav_maps"
-            app:destination="@id/nav_maps"
-            app:popUpTo="@id/nav_home" />
+            android:id="@+id/action_nav_notifications_to_nav_options"
+            app:destination="@id/nav_options"
+            app:popUpTo="@id/nav_notifications" />
     </fragment>
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.example.sevillatraffic.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        android:id="@+id/nav_googleRoute"
+        android:name="com.example.sevillatraffic.ui.googleRoute.GoogleRouteFragment"
+        android:label="@string/menu_googleRoute"
+        tools:layout="@layout/fragment_google_route" >
+        <action
+            android:id="@+id/action_nav_googleRoute_to_nav_maps"
+            app:destination="@id/nav_maps"
+            app:popUpTo="@id/nav_newRoute" />
+    </fragment>
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.example.sevillatraffic.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_manualRoute"
+        android:name="com.example.sevillatraffic.ui.manualRoute.ManualRouteFragment"
+        android:label="@string/menu_manualRoute"
+        tools:layout="@layout/fragment_manual_route" >
+        <action
+            android:id="@+id/action_nav_manualRoute_to_nav_maps"
+            app:destination="@id/nav_maps"
+            app:popUpTo="@id/nav_newRoute" />
+    </fragment>
     <action
         android:id="@+id/button2"
         app:popUpTo="@id/mobile_navigation"
@@ -51,5 +54,55 @@
         android:id="@+id/nav_maps"
         android:name="com.example.sevillatraffic.ui.maps.MapsFragment"
         android:label="@string/menu_maps"
-        tools:layout="@layout/maps_fragment" />
+        tools:layout="@layout/maps_fragment" >
+        <action
+            android:id="@+id/action_nav_maps_to_nav_edit_route"
+            app:destination="@id/nav_edit_route"
+            app:popUpTo="@id/nav_maps" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_newRoute"
+        android:name="com.example.sevillatraffic.ui.newRoute.NewRouteFragment"
+        android:label="@string/menu_newRoute"
+        tools:layout="@layout/fragment_new_route" >
+        <action
+            android:id="@+id/action_nav_newRoute_to_nav_googleRoute"
+            app:destination="@id/nav_googleRoute"
+            app:popUpTo="@id/nav_newRoute" />
+        <action
+            android:id="@+id/action_nav_newRoute_to_nav_manualRoute"
+            app:destination="@id/nav_manualRoute"
+            app:popUpTo="@id/nav_newRoute" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_edit_route"
+        android:name="com.example.sevillatraffic.ui.editRoute.EditRouteFragment"
+        android:label="@string/btn_save"
+        tools:layout="@layout/edit_route_fragment" />
+
+    <fragment
+        android:id="@+id/nav_my_routes"
+        android:name="com.example.sevillatraffic.ui.myroutes.MyRoutesFragment"
+        android:label="@string/menu_myRoutes"
+        tools:layout="@layout/my_routes_fragment" />
+
+    <fragment
+        android:id="@+id/nav_options"
+        android:name="com.example.sevillatraffic.ui.options.SettingsFragment"
+        android:label="@string/menu_options"
+         >
+        <action
+            android:id="@+id/action_nav_options_to_nav_notifications2"
+            app:destination="@id/nav_notifications"
+            app:popUpTo="@id/nav_notifications" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_app_info"
+        android:name="com.example.sevillatraffic.ui.info.InfoFragment"
+        android:label="@string/menu_info"
+        tools:layout="@layout/info_fragment" />
+
 </navigation>

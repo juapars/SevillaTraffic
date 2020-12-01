@@ -1,0 +1,42 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/settings">
+
+    <PreferenceCategory app:title="@string/sync_header">
+
+        <SwitchPreferenceCompat
+            app:key="detectors"
+            app:summaryOff="@string/opt_detectors_sumOff"
+            app:summaryOn="@string/opt_detectors_sumOn"
+            app:title="@string/opt_detectors" />
+
+        <SwitchPreferenceCompat
+            app:key="fluid"
+            app:summaryOff="@string/txt_opt_fluid_sumOff"
+            app:summaryOn="@string/txt_opt_fluid_sumOn"
+            app:title="@string/txt_opt_fluid" />
+
+        <SwitchPreferenceCompat
+            app:key="voice"
+            app:summaryOff="@string/txt_opt_voice_sumOff"
+            app:summaryOn="@string/txt_opt_voice_sumOn"
+            app:title="@string/txt_opt_voice" />
+
+        <SwitchPreferenceCompat
+            app:key="voiceCar"
+            app:summaryOff="@string/txt_opt_voiceCar_sumOff"
+            app:summaryOn="@string/txt_opt_voiceCar_sumOn"
+             />
+
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/app_info_title">
+
+        <Preference
+            android:key="info"
+            android:title="@string/app_info">
+
+        </Preference>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

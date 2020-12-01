@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/edit_route"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.editRoute.EditRouteFragment">
+
+
+    <EditText
+        android:id="@+id/edt_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:ems="10"
+        android:hint="Ruta 1"
+        android:inputType="textPersonName"
+        android:selectAllOnFocus="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_edit" />
+
+    <TextView
+        android:id="@+id/txt_edit"
+        android:layout_width="376dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="45dp"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <EditText
+        android:id="@+id/edt_notStart"
+        android:layout_width="71dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:hint="08:00"
+        android:inputType="time"
+        app:layout_constraintEnd_toStartOf="@+id/ib_notStart"
+        app:layout_constraintHorizontal_bias="0.661"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_notStart" />
+
+    <ImageButton
+        android:id="@+id/ib_notStart"
+        style="@android:style/Widget.DeviceDefault.ImageButton"
+        android:layout_width="61dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="60dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:src="@drawable/ic_baseline_access_time_white_24"
+        app:layout_constraintEnd_toStartOf="@+id/edt_notEnd"
+        app:layout_constraintTop_toBottomOf="@+id/txt_notStart"
+        tools:ignore="ContentDescription" />
+
+    <EditText
+        android:id="@+id/edt_notEnd"
+        android:layout_width="71dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="17dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:hint="10:30"
+        android:inputType="time"
+        app:layout_constraintEnd_toStartOf="@+id/ib_notEnd"
+        app:layout_constraintTop_toBottomOf="@+id/txt_notEnd" />
+
+    <ImageButton
+        android:id="@+id/ib_notEnd"
+        style="@style/Widget.AppCompat.ImageButton"
+        android:layout_width="63dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="82dp"
+        android:layout_marginEnd="20dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:src="@drawable/ic_baseline_access_time_white_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_not"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/txt_not"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="45dp"
+        android:text="@string/txt_not"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edt_name" />
+
+    <Button
+        android:id="@+id/btn_save"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="129dp"
+        android:layout_height="58dp"
+        android:layout_marginTop="57dp"
+        android:backgroundTint="@color/colorAccent"
+        android:text="@string/btn_save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ib_notStart"
+        app:layout_constraintVertical_bias="0.041" />
+
+    <TextView
+        android:id="@+id/txt_notStart"
+        android:layout_width="63dp"
+        android:layout_height="22dp"
+        android:layout_marginTop="48dp"
+        android:text="@string/txt_notStart"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        app:layout_constraintEnd_toStartOf="@+id/txt_notEnd"
+        app:layout_constraintHorizontal_bias="0.371"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_not" />
+
+    <TextView
+        android:id="@+id/txt_notEnd"
+        android:layout_width="54dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="104dp"
+        android:text="@string/txt_notEnd"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_not" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
